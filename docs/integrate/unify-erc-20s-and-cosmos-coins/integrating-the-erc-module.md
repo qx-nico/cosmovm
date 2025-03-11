@@ -6,7 +6,7 @@ sidebar_position: 2
 
 If a given Cosmos EVM chain has not yet integrated the ERC-20 module into their codebase, this is a required step to enable STR v2.
 
-## **Keeper Implementation**
+## Keeper Implementation
 
 The module keeper needs to be added to the application struct.
 
@@ -57,7 +57,7 @@ To support the Single Token Representation v2, it is also required to pass the E
 	app.EvmKeeper = evmKeeper
 ```
 
-## **Module Accounts**
+## Module Accounts
 
 The ERC-20 module account has to be set up along with the corresponding permissions. Note, that the module requires minter and burner permissions if native ERC-20s should be supported to be handled through a corresponding token pair. This works through a mint-and-burn mechanism.
 
@@ -69,7 +69,7 @@ maccPerms = map[string][]string{
 }
 ```
 
-## **Module Basics**
+## Module Basics
 
 Add the ERC-20 module basics to the basic module manager. 
 
