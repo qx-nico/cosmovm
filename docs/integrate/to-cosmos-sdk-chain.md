@@ -4,14 +4,12 @@ sidebar_position: 1
 
 # Integrate into a Cosmos SDK Chain
 
-**Welcome to evmOS - The OS for web3 Businesses! 🤝** We’re thrilled to share our outline for technical onboarding of the evmOS technology with you, tailored to meet your specific needs.
-
-It serves as a guiding framework to help you along the way of introducing the Cosmos ecosystem’s battle-tested EVM solution into your own blockchain.
+This guide will help you integrate onto a Cosmos SDK - based chain.
 
 
-# ☑️ Prerequisites
+## ☑️ Prerequisites
 
-In order to ensure a smooth integration, we recommend to align the major dependencies with the desired version of evmOS that should be integrated. The main dependencies that should have the required version before integrating evmOS are:
+We recommend to align the major dependencies with the desired version of Cosmos EVM that should be integrated. The main dependencies that should have the required version before integrating Cosmos EVM are:
 
 <details>
 	<summary>Click to expand</summary>
@@ -26,7 +24,7 @@ In order to ensure a smooth integration, we recommend to align the major depende
 
 ---
 
-# 🧩 Integration
+## 🧩 Integration
 
 Integration of Cosmos EVM is divided on Module Imports, Application Wiring, Ante Handlers, Integrating The RPC Server, followed by base configurations.
 
@@ -39,42 +37,42 @@ To start off, the necessary module imports need to be added to the `go.mod` file
 <details>
 	<summary>Click to expand</summary>
 
-- **evmOS**
+- **Cosmos EVM**
     
-    Add the corresponding module import for the desired version of evmOS to the go module file.
+    Add the corresponding module import for the desired version of Cosmos EVM to the go module file.
     
     ```bash
-    go get github.com/evmos/evmos/v19.1.0
+    go get github.com/cosmos/cosmos-evm/v19.1.0
     #                              ^ --- adjust version to desired one
     ```
     
 - **Cosmos SDK**
     
-    Add a replace directive to the corresponding release tag on the evmOS’ fork of the Cosmos-SDK.
+    Add a replace directive to the corresponding release tag on the Cosmos EVM fork of the Cosmos-SDK.
     
-    | **Supported SDK Version** | **evmOS Version** | **evmOS Fork** |
+    | **Supported SDK Version** | **Cosmos EVM Version** | **EVM Fork** |
     | --- | --- | --- |
-    | v0.47.8 | v19.1.0 | v0.47.8-evmos.2 |
-    | v0.50.7 | (not yet released) | v0.50.7-evmos |
+    | v0.47.8 | v19.1.0 | v0.47.8-cosmos-evm.2 |
+    | v0.50.7 | (not yet released) | v0.50.7-cosmos-evm |
     
     ```bash
     go mod edit --replace \
-    github.com/cosmos/cosmos-sdk=github.com/evmos/cosmos-sdk@vY
+    github.com/cosmos/cosmos-sdk=github.com/cosmos/cosmos-sdk@vY
     #                       adjust version to desired one --- ^
     ```
     
 - **Go-Ethereum**
     
     
-    Add a replace directive to the corresponding tag on evmOS’ Go-Ethereum fork.
+    Add a replace directive to the corresponding tag on Cosmos EVM's Go-Ethereum fork.
     
-    | **evmOS Version** | **Go-Ethereum Version** | **evmOS Fork** |
+    | **Cosmos EVM Version** | **Go-Ethereum Version** | **Cosmos EVM Fork** |
     | --- | --- | --- |
-    | v18.1.0 | v1.10.26 | v1.10.26-evmos |
+    | v18.1.0 | v1.10.26 | v1.10.26-cosmos-evm |
     
     ```bash
     go mod edit --replace \
-    github.com/ethereum/go-ethereum=github.com/evmos/go-ethereum@vZ
+    github.com/ethereum/go-ethereum=github.com/cosmos/go-ethereum@vZ
     #                           adjust version to desired one --- ^
     ```
 
@@ -87,9 +85,9 @@ The base application is inherited from the Cosmos SDK stack. It can be adjusted 
 <details>
 	<summary>Click to expand</summary>
 
-For the integration of the evmOS solution, we currently require using a `NoOpMempool` for the application specific mempool. For more information on this, refer to the [corresponding Cosmos documentation](https://docs.cosmos.network/main/build/building-apps/app-mempool#no-op-mempool).
+For the integration of the Cosmos EVM solution, we currently require using a `NoOpMempool` for the application specific mempool. For more information on this, refer to the [corresponding Cosmos documentation](https://docs.cosmos.network/main/build/building-apps/app-mempool#no-op-mempool).
 
-- *Tell me why!*
+*Tell me why!*
     
     The specific reason for this is that the provided mempool implementations of the Cosmos SDK require a non-empty signers field of the handled `sdk.Msg`. However, the Ethereum transactions are signed in a different way compared to standard Cosmos messages and their signature verification is happening only at the ante handler level. Hence, inside of the mempool, these messages are “unsigned” from the Cosmos perspective and other implementations than the `NoOpMempool` will fail to handle them.
     
@@ -114,7 +112,7 @@ baseAppOptions = append(baseAppOptions, func(app *baseapp.BaseApp) {
 
 ## 🔌 Application Wiring
 
-As the next step to integrate the evmOS, it is required to add the necessary application wiring within the chains’ `app.go`.
+As the next step to integrate the EVM OS, it is required to add the necessary application wiring within the chains’ `app.go`.
 
 <details>
 	<summary>Click to expand</summary>
@@ -158,7 +156,7 @@ type ExampleApp struct {
 
 Instantiation of the keepers is straightforward for the feemarket module but requires additional setup for the EVM module, as the map of available precompiled smart contracts is defined at the application instantiation level.
 
-Precompiled smart contracts have originally been designed to enable running computation-heavy operations on-chain without the need to have it run by the Solidity interpreter. We have adjusted this implementation to enable our [EVM Extensions](https://docs.evmos.org/develop/smart-contracts/evm-extensions), which make it possible for smart contracts to interact with Cosmos-native functionality of a chain.
+Precompiled smart contracts have originally been designed to enable running computation-heavy operations on-chain without the need to have it run by the Solidity interpreter. We have adjusted this implementation to enable our [EVM Extensions](https://evm.cosmos.network/develop/smart-contracts/evm-extensions), which make it possible for smart contracts to interact with Cosmos-native functionality of a chain.
 
 In case, that only the default Ethereum behavior is desired, the instantiation can point to Ethereum’s map of precompiles.
 
@@ -171,10 +169,10 @@ In case, that only the default Ethereum behavior is desired, the instantiation c
 		evmtypes "github.com/evmos/evmos/v19/x/evm/types"
 		feemarketkeeper "github.com/evmos/evmos/v19/x/feemarket/keeper"
 		feemarkettypes "github.com/evmos/evmos/v19/x/feemarket/types"
-		srvflags "github.com/evmos/os/server/flags"
+		srvflags "github.com/cosmos/cosmos-evm/server/flags"
 	)
 	
-	// evmOS keepers
+	// Cosmos EVM keepers
 	app.FeeMarketKeeper = feemarketkeeper.NewKeeper(
 		appCodec, authtypes.NewModuleAddress(govtypes.ModuleName),
 		keys[feemarkettypes.StoreKey],
@@ -210,7 +208,7 @@ The reference implementation for a method that returns the map of blocked addres
 // These include:
 //   - module accounts
 //   - Ethereum's native precompiles
-//   - the static precompiled contracts available through evmOS
+//   - the static precompiled contracts available through Cosmos EVM
 func (app *ExampleApp) BlockedAddrs() map[string]bool {
 	blockedAddrs := make(map[string]bool)
 
@@ -243,7 +241,7 @@ func (app *ExampleApp) BlockedAddrs() map[string]bool {
 
 ## 🤝 Ante Handlers
 
-The evmOS solution enables developers to build chains that handle Ethereum style transactions as well as standard Cosmos SDK transactions. This is accounted for by introducing separate ante handlers these transaction types and routing the transaction handling accordingly.
+Cosmos EVM enables developers to build chains that handle Ethereum style transactions as well as standard Cosmos SDK transactions. This is accounted for by introducing separate ante handlers these transaction types and routing the transaction handling accordingly.
 
 <details>
 	<summary>Click to expand</summary>
@@ -280,7 +278,7 @@ This is also accompanied by another ante decorator ([here](https://github.com/ev
 ## 📡 Integrating The RPC Server
 
 The JSON-RPC server is required for communication with the EVM backend and tooling. Its implementation lives in the server package and it is being set up when running the appd start command.
-Integrating this into the codebase of an existing Cosmos SDK-based blockchain can be done by replacing the use of the Cosmos SDK server’s AddCommands method with evmOS' equivalent of this, which is extended to start the JSON-RPC server as well.
+Integrating this into the codebase of an existing Cosmos SDK-based blockchain can be done by replacing the use of the Cosmos SDK server’s AddCommands method with Cosmos EVM's equivalent of this, which is extended to start the JSON-RPC server as well.
 
 <details>
 	<summary>Click to expand</summary>
@@ -302,17 +300,17 @@ In the standard approach to building a Cosmos SDK-based chain, this configuratio
 import (
 	// ...
 	serverconfig "github.com/cosmos/cosmos-sdk/server/config"
-	evmosserverconfig "github.com/evmos/os/server/config"
+	cevmserverconfig "github.com/cosmos/cosmos-evm/server/config"
 )
 
 func initAppConfig() (string, interface{}) {
 	type CustomAppConfig struct {
 		serverconfig.Config
 
-		// evmOS configuration
-		EVM     evmosserverconfig.EVMConfig
-		JSONRPC evmosserverconfig.JSONRPCConfig
-		TLS     evmosserverconfig.TLSConfig
+		// Cosmos EVM configuration
+		EVM     cevmserverconfig.EVMConfig
+		JSONRPC cevmserverconfig.JSONRPCConfig
+		TLS     cevmserverconfig.TLSConfig
 	}
 
 	srvCfg := serverconfig.DefaultConfig()
@@ -321,15 +319,15 @@ func initAppConfig() (string, interface{}) {
 
 	customAppConfig := CustomAppConfig{
 		Config:  *srvCfg,
-		// evmOS configuration
-		EVM:     *evmosserverconfig.DefaultEVMConfig(),
-		JSONRPC: *evmosserverconfig.DefaultJSONRPCConfig(),
-		TLS:     *evmosserverconfig.DefaultTLSConfig(),
+		// Cosmos EVM configuration
+		EVM:     *cevmserverconfig.DefaultEVMConfig(),
+		JSONRPC: *cevmserverconfig.DefaultJSONRPCConfig(),
+		TLS:     *cevmserverconfig.DefaultTLSConfig(),
 	}
 
 	customAppTemplate := serverconfig.DefaultConfigTemplate +
-		// evmOS configuration
-		evmosserverconfig.DefaultEVMConfigTemplate
+		// Cosmos EVM configuration
+		cevmserverconfig.DefaultEVMConfigTemplate
 
 	return customAppTemplate, customAppConfig
 }
@@ -350,7 +348,7 @@ On the EVM, sender and recipient addresses are however included in the chain-agn
 
 It is common in the EVM ecosystem to check https://chainid.network/ to pick a suitable unique chain ID and add a corresponding entry to the [Ethereum networks list](https://github.com/ethereum-lists/chains/tree/master/_data/chains) to avoid duplication between chains. Another relevant resource to add the chain ID to is https://github.com/DefiLlama/chainlist/blob/d0d752221c76f5dcc7109bbe5d1d0dc5ecb319f4/constants/chainIds.json#L85.
 
-The expected chain ID format would be `chainname_XXXXX-Y`, where X is the EIP-155 chain ID and Y the increment of chain IDs after e.g. a hard fork has happened. This is enforced in the EVM types in the evmOS codebase: https://github.com/evmos/evmos/blob/dc3b28d8bd000b72c9483acc051cf74e43e8b043/types/chain_id.go#L15-L25.
+The expected chain ID format would be `chainname_XXXXX-Y`, where X is the EIP-155 chain ID and Y the increment of chain IDs after e.g. a hard fork has happened. This is enforced in the EVM types in the evmos codebase: https://github.com/evmos/evmos/blob/dc3b28d8bd000b72c9483acc051cf74e43e8b043/types/chain_id.go#L15-L25.
 
 </details>
 
@@ -358,7 +356,7 @@ The expected chain ID format would be `chainname_XXXXX-Y`, where X is the EIP-15
 
 ## 🔐 Adopting The `ethsecp256k1` Signing Algorithm
 
-To enable native EVM support, evmOS relies on a different signing algorithm compared to the standard Cosmos chains. More detailed information about this can be found in the following dropdown:
+To enable native EVM support, Cosmos EVM relies on a different signing algorithm compared to the standard Cosmos chains. More detailed information about this can be found in the following dropdown:
 
 <details>
 	<summary>Click to expand</summary>
@@ -369,21 +367,21 @@ To enable native EVM support, evmOS relies on a different signing algorithm comp
     
     Also, their address derivation scheme, i.e. how the address is created from the public key, differs. EVM uses the Keccak hashing algorithm and trims the resulting hash to the first 20 bytes, while Cosmos uses sha256. This difference is independent of the resulting address representation in either Bech32 or Hex representation.
     
-    For the evmOS’ main chain, the configuration when integrating with Cosmos wallet partners like Leap or Keplr is reflecting this different coin type and is using `60` instead.
+    For the Cosmos EVM main chain, the configuration when integrating with Cosmos wallet partners like Leap or Keplr is reflecting this different coin type and is using `60` instead.
     
 
-The short of it is, that it is required to add support for this signing algorithm by importing the evmOS key types and registering the corresponding interfaces in the used `params.EncodingConfig`. Note, that these functions already include the `cosmos-sdk/std` registrations, so they can be discarded and will other raise an error of duplicate registrations.
+The short of it is, that it is required to add support for this signing algorithm by importing the Cosmos EVM key types and registering the corresponding interfaces in the used `params.EncodingConfig`. Note, that these functions already include the `cosmos-sdk/std` registrations, so they can be discarded and will other raise an error of duplicate registrations.
 
 ```go
 // cmd/root.go
 import (
 	// ...
-	evmosencoding "https://github.com/evmos/os/encoding"
+	cvmencoding "https://github.com/cosmos/cosmos-evm/encoding"
 )
 
 func NewRootCmd() *cobra.Command {
 	// Register the codecs including the eth_secp256k1 signing algorithm
-	encodingConfig := evmosencoding.MakeConfig(app.ModuleBasics)
+	encodingConfig := cvm.MakeConfig(app.ModuleBasics)
 	
 	// ...
 }
@@ -393,13 +391,13 @@ func NewRootCmd() *cobra.Command {
 // app/app.go
 import (
 	// ...
-	evmosencoding "https://github.com/evmos/encoding"
+	cvm "https://github.com/evmos/encoding"
 )
 
 func NewExampleApp(
 	// ...
 ) *ExampleApp {
-	encodingConfig := evmosencoding.MakeConfig(app.ModuleBasics)
+	encodingConfig := cvm.MakeConfig(app.ModuleBasics)
 	
 	// ...
 )
@@ -442,7 +440,7 @@ As opposed to Cosmos chains that use micro-units, the Ethereum based chains opt 
 
 ## 🆙 Chain Upgrade & **Migrations**
 
-Naturally when adding new modules to the chain there will be a migration necessary in terms of initialising the new parameters during the upgrade as well as adding the new key value stores for the added modules. This will require a coordinated chain upgrade as detailed e.g. in [our upgrades documentation](https://docs.evmos.org/validate/upgrades).
+Naturally when adding new modules to the chain there will be a migration necessary in terms of initialising the new parameters during the upgrade as well as adding the new key value stores for the added modules. This will require a coordinated chain upgrade as detailed e.g. in [our upgrades documentation](https://evm.cosmos.network/validate/upgrades).
 
 Check the [EVM](https://github.com/evmos/evmos/blob/ceae6608955f1279546066dad1a53a53593790cd/proto/ethermint/evm/v1/evm.proto#L11-L34) and [feemarket](https://github.com/evmos/evmos/blob/ceae6608955f1279546066dad1a53a53593790cd/proto/ethermint/feemarket/v1/feemarket.proto#L12-L44) module parameters for an overview of the fields to set with the desired values.
 
@@ -451,7 +449,7 @@ Check the [EVM](https://github.com/evmos/evmos/blob/ceae6608955f1279546066dad1a5
 
 ## 👨‍💻 CLI Configuration
 
-There is a selection of different CLI commands that are unique to the evmOS codebase, which can be included in any partner’s application binaries. The most useful ones are listed below:
+There is a selection of different CLI commands that are unique to the Cosmos EVM codebase, which can be included in any partner’s application binaries. The most useful ones are listed below:
 
 <details>
 	<summary>Click to expand</summary>
@@ -489,13 +487,13 @@ To do so, include the following command in the initialization of the root comman
     // cmd/root.go
     import (
     	// ...
-    	evmosencoding "https://github.com/evmos/evmos/v18/encoding"
-    	evmoseip712 "github.com/evmos/os/ethereum/eip712"
+    	cevmencoding "https://github.com/cosmos/cosmos-evm/v18/encoding"
+    	cevmeip712 "github.com/cosmos/cosmos/evm/ethereum/eip712"
     )
     
     func NewRootCmd() *cobra.Command {
-    	encodingConfig := evmosencoding.MakeConfig(()
-    	evmoseip712.SetEncodingConfig(
+    	encodingConfig := cevmencoding.MakeConfig(()
+    	cevmeip712.SetEncodingConfig(
     		encodingConfig.Amino,
     		encodingConfig.InterfaceRegistry,
     	)
@@ -510,15 +508,15 @@ To do so, include the following command in the initialization of the root comman
     // app/app.go
     import (
     	// ...
-    	evmosencoding "https://github.com/evmos/evmos/v18/encoding"
-    	evmoseip712 "github.com/evmos/os/ethereum/eip712"
+    	cevmencoding "https://github.com/evmos/evmos/v18/encoding"
+    	cevmeip712 "github.com/cosmos/cosmos-evm/ethereum/eip712"
     )
     
     func NewExampleApp(
     	// ...
     ) *ExampleApp {
-    	encodingConfig := evmosencoding.MakeConfig(app.ModuleBasics)
-    	evmoseip712.SetEncodingConfig(
+    	encodingConfig := cevmencoding.MakeConfig(app.ModuleBasics)
+    	cevmeip712.SetEncodingConfig(
     		encodingConfig.Amino,
     		encodingConfig.InterfaceRegistry,
     	)
@@ -533,14 +531,14 @@ To do so, include the following command in the initialization of the root comman
 
 ## 💽 Ledger Integration
 
-evmOS enables using Ledger’s Ethereum app to send EVM transactions with the corresponding hardware wallets.
+Cosmos EVM enables using Ledger’s Ethereum app to send EVM transactions with the corresponding hardware wallets.
 
 <details>
 	<summary>Click to expand</summary>
 
 To enable this, it’s required to add the following context options to the client context:
 
-https://github.com/evmos/os/blob/bf18711/example_chain/osd/cmd/root.go#L77-L89
+https://github.com/cosmos/cosmos/evm/blob/bf18711/example_chain/osd/cmd/root.go#L77-L89
 
 ```jsx
 initClientCtx := client.Context{}.
@@ -550,7 +548,7 @@ initClientCtx := client.Context{}.
 
 Additionally, the keyring options should be adjusted to defer the Ledger support from the default Cosmos SDK application to the Ethereum one:
 
-https://github.com/evmos/os/blob/cff4d2a/crypto/keyring/options.go#L16-L47
+https://github.com/cosmos/cosmos-evm/blob/cff4d2a/crypto/keyring/options.go#L16-L47
 
 This has to replicated / imported into any customer repositories that desire to exhibit the same behavior.
 
@@ -560,10 +558,10 @@ This has to replicated / imported into any customer repositories that desire to 
 
 # 🔭 What’s Next?
 
-After onboarding to evmOS your chain now has a proven EVM implementation available for smart contract developers to build on top of and EVM wallet users to tap into natively!
+After onboarding to Cosmos EVM your chain now has a proven EVM implementation available for smart contract developers to build on top of and EVM wallet users to tap into natively!
 
 This amazing new experience can be improved even more:
 
 - [Unify ERC-20s and Cosmos Coins](https://www.notion.so/Unify-ERC-20s-and-Cosmos-Coins-431b2ea75c7e486b9ce9a127f449897b?pvs=21) with the *Single Token Representation v2*.
-- [Enable EVM Extensions](https://www.notion.so/Enable-EVM-Extensions-81f1186d25ec4c7a8fd951e644c6802c?pvs=21) or add your own custom implementations, that let smart contract developers and EVM users access your Cosmos SDK module functionality! More information can be found here: https://docs.evmos.org/develop/smart-contracts/evm-extensions.
-- Add more functionality from the https://docs.evmos.org/protocol/modules.
+- [Enable EVM Extensions](https://www.notion.so/Enable-EVM-Extensions-81f1186d25ec4c7a8fd951e644c6802c?pvs=21) or add your own custom implementations, that let smart contract developers and EVM users access your Cosmos SDK module functionality! More information can be found here: https://evm.cosmos.network/develop/smart-contracts/evm-extensions.
+- Add more functionality from the https://evm.cosmos.network/protocol/modules.
