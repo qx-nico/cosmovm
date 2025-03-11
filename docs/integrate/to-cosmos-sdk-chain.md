@@ -243,9 +243,6 @@ func (app *ExampleApp) BlockedAddrs() map[string]bool {
 
 Cosmos EVM enables developers to build chains that handle Ethereum style transactions as well as standard Cosmos SDK transactions. This is accounted for by introducing separate ante handlers these transaction types and routing the transaction handling accordingly.
 
-<details>
-	<summary>Click to expand</summary>
-
 This is required to account for the different approaches to e.g. handling gas payments for the corresponding transactions or the different signature verifications.
 
 Specifically, our implementation relies on the corresponding signature verification handlers ([EVM](https://github.com/evmos/evmos/blob/main/app/ante/evm/05_signature_verification.go#L58), [Cosmos](https://github.com/evmos/evmos/blob/main/app/ante/sigverify.go#L37) & [EIP-712 Cosmos Messages](https://github.com/evmos/evmos/blob/main/app/ante/cosmos/eip712.go#L61)) and the custom logic to [deduct fees](https://github.com/evmos/evmos/blob/main/app/ante/evm/fee_checker.go#L20-L41), which is dependent on our implementation of the EIP-1559 and will have to be implemented on the customer chains.
@@ -270,8 +267,6 @@ This is also accompanied by another ante decorator ([here](https://github.com/ev
     - Main handler logic which divides EVM and Cosmos transactions: https://github.com/evmos/evmos/blob/main/app/ante/ante.go#L16-L54
         - Mono handler for EVM transactions: https://github.com/evmos/evmos/blob/main/app/ante/evm/mono.go#L108-L313
         - Chained handler for Cosmos transactions: https://github.com/evmos/evmos/blob/main/app/ante/cosmos.go#L18-L40
-
-</details>
 
 ---
 
@@ -341,16 +336,11 @@ func initAppConfig() (string, interface{}) {
 
 Using Bech32 formatted addresses with the chain-specific address prefix has the advantage that replay protection is basically inherently included in Cosmos transactions.
 
-<details>
-	<summary>Click to expand</summary>
-
 On the EVM, sender and recipient addresses are however included in the chain-agnostic Hex representation. This means that replay-protection becomes relevant when adding the EVM to the chains.
 
 It is common in the EVM ecosystem to check https://chainid.network/ to pick a suitable unique chain ID and add a corresponding entry to the [Ethereum networks list](https://github.com/ethereum-lists/chains/tree/master/_data/chains) to avoid duplication between chains. Another relevant resource to add the chain ID to is https://github.com/DefiLlama/chainlist/blob/d0d752221c76f5dcc7109bbe5d1d0dc5ecb319f4/constants/chainIds.json#L85.
 
 The expected chain ID format would be `chainname_XXXXX-Y`, where X is the EIP-155 chain ID and Y the increment of chain IDs after e.g. a hard fork has happened. This is enforced in the EVM types in the evmos codebase: https://github.com/evmos/evmos/blob/dc3b28d8bd000b72c9483acc051cf74e43e8b043/types/chain_id.go#L15-L25.
-
-</details>
 
 ---
 
@@ -361,13 +351,13 @@ To enable native EVM support, Cosmos EVM relies on a different signing algorithm
 <details>
 	<summary>Click to expand</summary>
 
-- ⚠️ **A note on signing algorithms**
+ ⚠️ **A note on signing algorithms**
     
-    Cosmos and EVM wallets both use the same elliptic curve - `secp256k1`. However, there are two primary compatibility issues. According to the BIP-44 spec, the HD Path has different components: `m / purpose' / coin_type' / account' / change / address_index`. Cosmos chains and EVMs use different HD Path coin type values to derivate the public key from the private key. While Cosmos uses `118`, EVMs use `60`. 
+Cosmos and EVM wallets both use the same elliptic curve - `secp256k1`. However, there are two primary compatibility issues. According to the BIP-44 spec, the HD Path has different components: `m / purpose' / coin_type' / account' / change / address_index`. Cosmos chains and EVMs use different HD Path coin type values to derivate the public key from the private key. While Cosmos uses `118`, EVMs use `60`. 
     
-    Also, their address derivation scheme, i.e. how the address is created from the public key, differs. EVM uses the Keccak hashing algorithm and trims the resulting hash to the first 20 bytes, while Cosmos uses sha256. This difference is independent of the resulting address representation in either Bech32 or Hex representation.
+Also, their address derivation scheme, i.e. how the address is created from the public key, differs. EVM uses the Keccak hashing algorithm and trims the resulting hash to the first 20 bytes, while Cosmos uses sha256. This difference is independent of the resulting address representation in either Bech32 or Hex representation.
     
-    For the Cosmos EVM main chain, the configuration when integrating with Cosmos wallet partners like Leap or Keplr is reflecting this different coin type and is using `60` instead.
+For the Cosmos EVM main chain, the configuration when integrating with Cosmos wallet partners like Leap or Keplr is reflecting this different coin type and is using `60` instead.
     
 
 The short of it is, that it is required to add support for this signing algorithm by importing the Cosmos EVM key types and registering the corresponding interfaces in the used `params.EncodingConfig`. Note, that these functions already include the `cosmos-sdk/std` registrations, so they can be discarded and will other raise an error of duplicate registrations.
@@ -424,15 +414,15 @@ As opposed to Cosmos chains that use micro-units, the Ethereum based chains opt 
 <details>
 	<summary>Click to expand</summary>
 
-- **Possible Solution**
+**Possible Solution**
     
-    Kava has implemented a solution that is making use of both, i.e. `ukava` and `akava`. This might also be a suitable solution for any evmOS partners but it could cause unnecessary overhead and complication when integrating evmOS into the codebase.
+Kava has implemented a solution that is making use of both, i.e. `ukava` and `akava`. This might also be a suitable solution for any evmOS partners but it could cause unnecessary overhead and complication when integrating evmOS into the codebase.
     
-    **Implementation Details**
+**Implementation Details**
     
-    The Kava codebase has a dedicated [EvmBankKeeper](https://github.com/Kava-Labs/kava/blob/346f4be683b6f967ade50794c8ee0577681784be/x/evmutil/keeper/bank_keeper.go), which is keeping track of balances in `akava` (EVM denom) and `ukava` (Cosmos denom).
+The Kava codebase has a dedicated [EvmBankKeeper](https://github.com/Kava-Labs/kava/blob/346f4be683b6f967ade50794c8ee0577681784be/x/evmutil/keeper/bank_keeper.go), which is keeping track of balances in `akava` (EVM denom) and `ukava` (Cosmos denom).
     
-    This design holds two separate balances of these denominations and converts them between each other if necessary. An example of how this adds overhead can be seen in the [GetBalance](https://github.com/Kava-Labs/kava/blob/346f4be683b6f967ade50794c8ee0577681784be/x/evmutil/keeper/bank_keeper.go#L48-L59) method, where the total spendable balance is derived of adding the `akava` and `ukava` balances.
+This design holds two separate balances of these denominations and converts them between each other if necessary. An example of how this adds overhead can be seen in the [GetBalance](https://github.com/Kava-Labs/kava/blob/346f4be683b6f967ade50794c8ee0577681784be/x/evmutil/keeper/bank_keeper.go#L48-L59) method, where the total spendable balance is derived of adding the `akava` and `ukava` balances.
 
 </details>
 
@@ -536,9 +526,7 @@ Cosmos EVM enables using Ledger’s Ethereum app to send EVM transactions with t
 <details>
 	<summary>Click to expand</summary>
 
-To enable this, it’s required to add the following context options to the client context:
-
-https://github.com/cosmos/cosmos/evm/blob/bf18711/example_chain/osd/cmd/root.go#L77-L89
+To enable this, it’s required to add the following context options to the client context: https://github.com/cosmos/cosmos/evm/blob/bf18711/example_chain/osd/cmd/root.go#L77-L89
 
 ```jsx
 initClientCtx := client.Context{}.
@@ -546,9 +534,7 @@ initClientCtx := client.Context{}.
 	WithLedgerHasProtobuf(true) // support for Ledger
 ```
 
-Additionally, the keyring options should be adjusted to defer the Ledger support from the default Cosmos SDK application to the Ethereum one:
-
-https://github.com/cosmos/cosmos-evm/blob/cff4d2a/crypto/keyring/options.go#L16-L47
+Additionally, the keyring options should be adjusted to defer the Ledger support from the default Cosmos SDK application to the Ethereum one: https://github.com/cosmos/cosmos-evm/blob/cff4d2a/crypto/keyring/options.go#L16-L47
 
 This has to replicated / imported into any customer repositories that desire to exhibit the same behavior.
 
