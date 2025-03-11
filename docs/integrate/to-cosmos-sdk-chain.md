@@ -24,13 +24,13 @@ In order to ensure a smooth integration, we recommend to align the major depende
 
 </details>
 
-***
+---
 
 # 🧩 Integration
 
 Integration of Cosmos EVM is divided on Module Imports, Application Wiring, Ante Handlers, Integrating The RPC Server, followed by base configurations.
 
-***
+---
 
 ## 📲 Module Imports
 
@@ -110,7 +110,7 @@ baseAppOptions = append(baseAppOptions, func(app *baseapp.BaseApp) {
 
 </details>
 
-***
+---
 
 ## 🔌 Application Wiring
 
@@ -239,7 +239,7 @@ func (app *ExampleApp) BlockedAddrs() map[string]bool {
 
 </details>
 
-***
+---
 
 ## 🤝 Ante Handlers
 
@@ -275,7 +275,7 @@ This is also accompanied by another ante decorator ([here](https://github.com/ev
 
 </details>
 
-***
+---
 
 ## 📡 Integrating The RPC Server
 
@@ -337,7 +337,7 @@ func initAppConfig() (string, interface{}) {
 
 </details>
 
-***
+---
 
 ## ⛓️ **Adopting An EIP-155 Compliant Chain ID**
 
@@ -354,7 +354,7 @@ The expected chain ID format would be `chainname_XXXXX-Y`, where X is the EIP-15
 
 </details>
 
-***
+---
 
 ## 🔐 Adopting The `ethsecp256k1` Signing Algorithm
 
@@ -417,7 +417,7 @@ https://github.com/evmos/evmos/blob/v19.2.0/app/ante/sigverify.go#L37-L63
 
 </details>
 
-***
+---
 
 ## 💱 **Adjusting The Base Units Of The Network Denomination**
 
@@ -438,7 +438,7 @@ As opposed to Cosmos chains that use micro-units, the Ethereum based chains opt 
 
 </details>
 
-***
+---
 
 ## 🆙 Chain Upgrade & **Migrations**
 
@@ -447,7 +447,7 @@ Naturally when adding new modules to the chain there will be a migration necessa
 Check the [EVM](https://github.com/evmos/evmos/blob/ceae6608955f1279546066dad1a53a53593790cd/proto/ethermint/evm/v1/evm.proto#L11-L34) and [feemarket](https://github.com/evmos/evmos/blob/ceae6608955f1279546066dad1a53a53593790cd/proto/ethermint/feemarket/v1/feemarket.proto#L12-L44) module parameters for an overview of the fields to set with the desired values.
 
 
-***
+---
 
 ## 👨‍💻 CLI Configuration
 
@@ -472,7 +472,7 @@ There is a selection of different CLI commands that are unique to the evmOS code
 
 </details>
 
-***
+---
 
 ## 🔏 EIP-712 Encoding
 
@@ -529,7 +529,7 @@ To do so, include the following command in the initialization of the root comman
 
 </details>
 
-***
+---
 
 ## 💽 Ledger Integration
 
@@ -556,7 +556,7 @@ This has to replicated / imported into any customer repositories that desire to 
 
 </details>
 
-***
+---
 
 # 🔭 What’s Next?
 
