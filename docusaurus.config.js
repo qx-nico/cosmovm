@@ -24,7 +24,7 @@ const SECTIONS = [
   defineSection('start-here'),
   defineSection('develop'),
   defineSection('protocol'),
-  defineSection('validate'),
+//  defineSection('validate'),
 ];
 
 /** @type {import('@docusaurus/types').Config} */
@@ -153,11 +153,11 @@ const config = {
             label: 'Protocol',
             to: '/protocol',
           },
-          {
-            position: 'left',
-            label: 'Validate',
-            to: '/validate',
-          },
+//          {
+//            position: 'left',
+//            label: 'Validate',
+//            to: '/validate',
+//          },
           {
             position: 'right',
             label: 'Tools',
@@ -194,10 +194,10 @@ const config = {
                 label: 'Contribute to Cosmos',
                 to: 'https://github.com/cosmos/',
               },
-              {
-                label: 'Become a Validator',
-                to: '/validate',
-              },
+       //       {
+   //             label: 'Become a Validator',
+      //          to: '/validate',
+        //     },
             ],
           },
           {

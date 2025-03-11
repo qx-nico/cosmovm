@@ -12,7 +12,7 @@ function Home() {
       <main>
         <br />
         <h1 align="center" style={{ fontWeight: "750" }}>
-          Welcome to Cosmos EVM's Docs
+          Welcome to Cosmos EVM Docs
         </h1>
         <section className={styles.features}>
           <div className="container">
@@ -64,7 +64,7 @@ function Home() {
               <Card
                 to="./protocol/security"
                 header={{
-                  label: "🛡️ Security on Cosmos EVM",
+                  label: "Security on Cosmos EVM",
                 }}
                 body={{
                   label: "Learn about our Security Policy",
