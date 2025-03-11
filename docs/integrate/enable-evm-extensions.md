@@ -1,5 +1,6 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
+
 ---
 
 # Integrate into a Cosmos SDK Chain
