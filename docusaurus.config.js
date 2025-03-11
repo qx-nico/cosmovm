@@ -21,7 +21,7 @@ function defineSection(section, options = {}) {
 }
 
 const SECTIONS = [
-  defineSection('integrate'),
+  defineSection('start-here'),
   defineSection('develop'),
   defineSection('protocol'),
 //  defineSection('validate'),
@@ -141,7 +141,7 @@ const config = {
           {
             position: 'left',
             label: 'Integrate',
-            to: '/integrate',
+            to: '/start-here',
           },
           {
             position: 'left',
@@ -257,10 +257,10 @@ const config = {
       ],
       algolia: {
         // The application ID provided by Algolia
-        appId: 'a',
+        appId: 'DPTADG0ME1',
   
         // Public API key: it is safe to commit it
-        apiKey: 'a',
+        apiKey: 'fbbcf85b58f500e5e4d301f9730f3526',
   
         indexName: 'cosmosevmdocs',
   
