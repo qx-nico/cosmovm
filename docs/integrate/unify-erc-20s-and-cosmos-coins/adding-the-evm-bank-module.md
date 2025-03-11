@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# 🏦 Adding The Bank EVM Extension
+# Adding The Bank EVM Extension
 
 STR v2 enables native coin transfers through EVM interfaces. This is enabled through the bank EVM extension, which provides the corresponding logic that relates to the token transfer methods native to the EVM.
 

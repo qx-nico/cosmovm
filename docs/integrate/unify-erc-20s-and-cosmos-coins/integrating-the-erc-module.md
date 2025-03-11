@@ -4,9 +4,9 @@ sidebar_position: 2
 
 # Integrating The ERC-20 Module
 
-If a given evmOS partner chain has not yet integrated the ERC-20 module into their codebase, this is a required step to enable STR v2.
+If a given Cosmos EVM chain has not yet integrated the ERC-20 module into their codebase, this is a required step to enable STR v2.
 
-### **Keeper Implementation**
+## **Keeper Implementation**
 
 The module keeper needs to be added to the application struct.
 
@@ -57,7 +57,7 @@ To support the Single Token Representation v2, it is also required to pass the E
 	app.EvmKeeper = evmKeeper
 ```
 
-### **Module Accounts**
+## **Module Accounts**
 
 The ERC-20 module account has to be set up along with the corresponding permissions. Note, that the module requires minter and burner permissions if native ERC-20s should be supported to be handled through a corresponding token pair. This works through a mint-and-burn mechanism.
 
@@ -69,7 +69,7 @@ maccPerms = map[string][]string{
 }
 ```
 
-### **Module Basics**
+## **Module Basics**
 
 Add the ERC-20 module basics to the basic module manager. 
 
@@ -98,7 +98,7 @@ ModuleBasics = module.NewBasicManager(
 )
 ```
 
-### Module Manager
+## Module Manager
 
 The main module manager needs to include the ERC-20 application module as well.
 
@@ -106,7 +106,7 @@ The main module manager needs to include the ERC-20 application module as well.
 app.mm = module.NewManager(
 		// ...
 		
-		// evmOS app modules
+		// Cosmos EVM app modules
 		evm.NewAppModule(app.EvmKeeper, app.AccountKeeper, app.GetSubspace(evmtypes.ModuleName)),
 		feemarket.NewAppModule(app.FeeMarketKeeper, app.GetSubspace(feemarkettypes.ModuleName)),	
 		erc20.NewAppModule(app.Erc20Keeper, app.AccountKeeper,
@@ -114,7 +114,7 @@ app.mm = module.NewManager(
 	)
 ```
 
-### Begin and End Block Order
+## Begin and End Block Order
 
 Even though the Begin- and EndBlock logic is currently a no-op for the ERC-20 module, we still recommend to add the module into the corresponding order functions of the module manager.
 
@@ -135,7 +135,7 @@ app.mm.SetOrderBeginBlockers(
 	)
 ```
 
-### Module Genesis Order
+## Module Genesis Order
 
 The ERC-20 module needs to be added to the order function for the `InitGenesis` functions of the individual modules in the application.
 
@@ -143,7 +143,7 @@ The ERC-20 module needs to be added to the order function for the `InitGenesis` 
 app.mm.SetOrderInitGenesis(
 		// ...
 		
-		// evmOS modules
+		// Cosmos EVM modules
 		evmtypes.ModuleName,
 		erc20types.ModuleName,
 		// NOTE: feemarket module needs to be initialized before genutil module:
@@ -155,7 +155,7 @@ app.mm.SetOrderInitGenesis(
 	)
 ```
 
-### Governance Router
+## Governance Router
 
 The governance proposal routes for the available proposals of the ERC-20 module need to be add to the governance router.
 
@@ -168,7 +168,7 @@ The governance proposal routes for the available proposals of the ERC-20 module 
 		AddRoute(erc20types.RouterKey, erc20.NewErc20ProposalHandler(&app.Erc20Keeper))
 ```
 
-### Parameter Subspace
+## Parameter Subspace
 
 To add the ERC-20 module’s parameters into the parameter keeper, it’s required to initially the corresponding subspace.
 
@@ -180,7 +180,7 @@ func initParamsKeeper(
 
 	// ...
 	
-	// evmOS subspaces
+	// Cosmos EVM subspaces
 	paramsKeeper.Subspace(evmtypes.ModuleName).WithKeyTable(evmtypes.ParamKeyTable()) //nolint: staticcheck
 	paramsKeeper.Subspace(feemarkettypes.ModuleName).WithKeyTable(feemarkettypes.ParamKeyTable())
 	paramsKeeper.Subspace(erc20types.ModuleName)
@@ -189,7 +189,7 @@ func initParamsKeeper(
 }
 ```
 
-### Store Keys
+## Store Keys
 
 It’s required to add the corresponding ERC-20 module’s store key to the slice of key-value store keys.
 
@@ -205,7 +205,7 @@ import (
 keys := sdk.NewKVStoreKeys(
 	// ...
 	
-	// evmOS store keys
+	// Cosmos EVM store keys
 	evmtypes.StoreKey,
 	feemarkettypes.StoreKey,
 	erc20types.StoreKey,

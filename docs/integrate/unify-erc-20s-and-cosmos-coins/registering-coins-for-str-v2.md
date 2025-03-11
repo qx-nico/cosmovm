@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# 🪙 Registering Coins For STR v2
+# Registering Coins For STR v2
 
 To enable existing Cosmos coins to be used with STR v2, it is required to register them as token pairs in the ERC-20 keeper and to add the corresponding smart contract address to the slice of active dynamic precompiles in the ERC-20 module parameters.
 
@@ -10,7 +10,7 @@ To enable existing Cosmos coins to be used with STR v2, it is required to regist
 
 There are two required parts to enable the transaction flow involving STR v2—integrating the corresponding IBC middleware as well as running the required upgrade logic, that is either introducing the ERC-20 module to the chain or migrating the existing token pairs that may already be present on a given chain.
 
-### 📦 Integrating The IBC Middleware
+## 📦 Integrating The IBC Middleware
 
 To reduce the manual labor required to handle STR v2 and to enable an autonomous flow of data, we have introduced an IBC middleware, that wraps the transfer module to provide two distinct use cases when it comes to the handling of ERC-20 tokens and Cosmos coins:
 
@@ -20,12 +20,12 @@ To reduce the manual labor required to handle STR v2 and to enable an autonomous
     
 2. Native ERC-20 tokens, that are registered as a token pair in the module, are automatically converted to Cosmos coins upon sending them in IBC transfers. This eliminates the need to unwrap them manually and is part of our previous model to improve handling between the two token representations.
     
-    There is more detailed information in [❓What About Existing Native ERC-20s?](https://www.notion.so/What-About-Existing-Native-ERC-20s-f8bd4fdb86914b15828a9cf36bf6c625?pvs=21) as to why these tokens are not supported by STR v2 (yet).
+    There is more detailed information in ❓What About Existing Native ERC-20s  as to why these tokens are not supported by STR v2 yet, in the index of this file.
     
 
-To enable the IBC middleware, the following additions are required in any evmOS partner chain:
+To enable the IBC middleware, the following additions are required in any Cosmos EVM Chain:
 
-- **Transfer Keeper Instantiation**
+### Transfer Keeper Instantiation
     
     The transfer keeper have the ERC-20 module keeper passed to it.
     
@@ -39,7 +39,7 @@ To enable the IBC middleware, the following additions are required in any evmOS 
     	)
     ```
     
-- **Transfer Stack**
+### Transfer Stack
     
     The application wiring needs to be extended to introduce the ERC-20 IBC middleware to the transfer stack.
     
@@ -66,11 +66,11 @@ To enable the IBC middleware, the following additions are required in any evmOS 
     ```
     
 
-### 🆙 Upgrade Logic
+## 🆙 Upgrade Logic
 
 In case the ERC-20 module has already been integrated in the given chain it will be required to run a corresponding migration to add the existing token pairs for native Cosmos coins to the list of supported coins for STR v2.
 
-- **Migration of existing Cosmos token pairs**
+### Migration of existing Cosmos token pairs
     
     The required migration for existing coins was done during the Evmos v19.0.0 chain upgrade and the reference implementation can be found here: https://github.com/evmos/evmos/blob/v19.0.0/app/upgrades/v19/upgrades.go#L37-L75.
     
@@ -84,7 +84,7 @@ In case the ERC-20 module has already been integrated in the given chain it will
 
 Alternatively, if the ERC-20 module is newly added to a given chain to enable this feature, the corresponding store upgrades will have to be conducted to add the ERC-20 module.
 
-- **Addition of ERC-20 store in upgrade handler**
+### Addition of ERC-20 store in upgrade handler
     
     The required store upgrades are defined here:
     
@@ -122,15 +122,15 @@ Alternatively, if the ERC-20 module is newly added to a given chain to enable th
     }
     ```
     
-- **Register the chain’s native denomination as a token pair**
+### Register the chain’s native denomination as a token pair
     
     As described above, each supported native Cosmos coin requires a registered ERC-20 token pair to be enabled for use with STR v2.
     
-    This naturally also goes for any evmOS partner chain’s native denomination. Hence, the upgrade that introduces the ERC-20 module to the chain should also register the native asset(s) as token pairs.
+    This naturally also goes for any Cosmos EVM chain’s native denomination. Hence, the upgrade that introduces the ERC-20 module to the chain should also register the native asset(s) as token pairs.
     
-- **Setting the defaults for the ERC-20 module parameters**
+### Setting the defaults for the ERC-20 module parameters
     
-    The ERC-20 module has a set of module parameters, that need to be instantiated and provided with sensible defaults for the given evmOS partner chain.
+    The ERC-20 module has a set of module parameters, that need to be instantiated and provided with sensible defaults for the given Cosmos EVM chain.
     
     To enable the functionality, the `enable_erc20` flag needs to be set to true. The `native_precompiles` holds an array of ERC-20 contract addresses for the chain’s native denomination(s), so if there was a corresponding smart contract deployed in the [previous described step](https://www.notion.so/Unify-ERC-20s-and-Cosmos-Coins-431b2ea75c7e486b9ce9a127f449897b?pvs=21) it should be added to this slice of strings.
     

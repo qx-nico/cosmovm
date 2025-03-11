@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Integrate into a Cosmos SDK Chain
+# Integrate into Cosmos SDK Chain
 
 This guide will help you integrate onto a Cosmos SDK - based chain.
 
