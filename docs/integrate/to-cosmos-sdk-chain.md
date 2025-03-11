@@ -10,9 +10,11 @@ It serves as a guiding framework to help you along the way of introducing the Co
 
 
 # ☑️ Prerequisites
-<details>
-  <summary>What you need to start</summary>
+
 In order to ensure a smooth integration, we recommend to align the major dependencies with the desired version of evmOS that should be integrated. The main dependencies that should have the required version before integrating evmOS are:
+
+<details>
+	<summary>Click to expand</summary>
 
 - **Cosmos SDK** (check the used version of [Cosmos EVM fork](https://github.com/cosmos/cosmos-sdk/tree/state-copy-fork))
 - **IBC-Go**
@@ -22,14 +24,20 @@ In order to ensure a smooth integration, we recommend to align the major depende
 
 </details>
 
-
 ***
 
 # 🧩 Integration
 
+Integration of Cosmos EVM is divided on Module Imports, Application Wiring, Ante Handlers, Integrating The RPC Server, followed by base configurations.
+
+***
+
 ## 📲 Module Imports
 
 To start off, the necessary module imports need to be added to the `go.mod` file:
+
+<details>
+	<summary>Click to expand</summary>
 
 - **evmOS**
     
@@ -69,11 +77,15 @@ To start off, the necessary module imports need to be added to the `go.mod` file
     github.com/ethereum/go-ethereum=github.com/evmos/go-ethereum@vZ
     #                           adjust version to desired one --- ^
     ```
-    
 
-### 🛠️ BaseApp Options
+</details>
+
+## 🛠️ BaseApp Options
 
 The base application is inherited from the Cosmos SDK stack. It can be adjusted to the respective needs of the implemented chain.
+
+<details>
+	<summary>Click to expand</summary>
 
 For the integration of the evmOS solution, we currently require using a `NoOpMempool` for the application specific mempool. For more information on this, refer to the [corresponding Cosmos documentation](https://docs.cosmos.network/main/build/building-apps/app-mempool#no-op-mempool).
 
@@ -95,6 +107,10 @@ baseAppOptions = append(baseAppOptions, func(app *baseapp.BaseApp) {
 	app.SetProcessProposal(handler.ProcessProposalHandler())
 })
 ```
+
+</details>
+
+***
 
 ## 🔌 Application Wiring
 
@@ -218,6 +234,8 @@ func (app *ExampleApp) BlockedAddrs() map[string]bool {
 }
 ```
 
+***
+
 ## 🤝 Ante Handlers
 
 The evmOS solution enables developers to build chains that handle Ethereum style transactions as well as standard Cosmos SDK transactions. This is accounted for by introducing separate ante handlers these transaction types and routing the transaction handling accordingly. 
@@ -246,6 +264,9 @@ This is also accompanied by another ante decorator ([here](https://github.com/ev
     - Main handler logic which divides EVM and Cosmos transactions: https://github.com/evmos/evmos/blob/main/app/ante/ante.go#L16-L54
         - Mono handler for EVM transactions: https://github.com/evmos/evmos/blob/main/app/ante/evm/mono.go#L108-L313
         - Chained handler for Cosmos transactions: https://github.com/evmos/evmos/blob/main/app/ante/cosmos.go#L18-L40
+
+
+***
 
 ## 📡 Integrating The RPC Server
 
@@ -301,6 +322,8 @@ func initAppConfig() (string, interface{}) {
 }
 ```
 
+***
+
 ## ⛓️ **Adopting An EIP-155 Compliant Chain ID**
 
 Using Bech32 formatted addresses with the chain-specific address prefix has the advantage that replay protection is basically inherently included in Cosmos transactions.
@@ -310,6 +333,8 @@ On the EVM, sender and recipient addresses are however included in the chain-agn
 It is common in the EVM ecosystem to check https://chainid.network/ to pick a suitable unique chain ID and add a corresponding entry to the [Ethereum networks list](https://github.com/ethereum-lists/chains/tree/master/_data/chains) to avoid duplication between chains. Another relevant resource to add the chain ID to is https://github.com/DefiLlama/chainlist/blob/d0d752221c76f5dcc7109bbe5d1d0dc5ecb319f4/constants/chainIds.json#L85.
 
 The expected chain ID format would be `chainname_XXXXX-Y`, where X is the EIP-155 chain ID and Y the increment of chain IDs after e.g. a hard fork has happened. This is enforced in the EVM types in the evmOS codebase: https://github.com/evmos/evmos/blob/dc3b28d8bd000b72c9483acc051cf74e43e8b043/types/chain_id.go#L15-L25.
+
+***
 
 ## 🔐 Adopting The `ethsecp256k1` Signing Algorithm
 
@@ -367,6 +392,8 @@ In the case of the Evmos chain, this algorithm is favored over the default `secp
 
 https://github.com/evmos/evmos/blob/v19.2.0/app/ante/sigverify.go#L37-L63
 
+***
+
 ## 💱 **Adjusting The Base Units Of The Network Denomination**
 
 As opposed to Cosmos chains that use micro-units, the Ethereum based chains opt for a base unit of 18 decimals (i.e. atto units). At the current moment, the evmOS codebase is not natively catered to work with micro units, so we would suggest where possible to adjust the chain IDs base denomination to be an atto unit instead.
@@ -380,6 +407,8 @@ As opposed to Cosmos chains that use micro-units, the Ethereum based chains opt 
     The Kava codebase has a dedicated [EvmBankKeeper](https://github.com/Kava-Labs/kava/blob/346f4be683b6f967ade50794c8ee0577681784be/x/evmutil/keeper/bank_keeper.go), which is keeping track of balances in `akava` (EVM denom) and `ukava` (Cosmos denom).
     
     This design holds two separate balances of these denominations and converts them between each other if necessary. An example of how this adds overhead can be seen in the [GetBalance](https://github.com/Kava-Labs/kava/blob/346f4be683b6f967ade50794c8ee0577681784be/x/evmutil/keeper/bank_keeper.go#L48-L59) method, where the total spendable balance is derived of adding the `akava` and `ukava` balances.
+
+***
     
 
 ## 🆙 Chain Upgrade & **Migrations**
@@ -387,6 +416,9 @@ As opposed to Cosmos chains that use micro-units, the Ethereum based chains opt 
 Naturally when adding new modules to the chain there will be a migration necessary in terms of initialising the new parameters during the upgrade as well as adding the new key value stores for the added modules. This will require a coordinated chain upgrade as detailed e.g. in [our upgrades documentation](https://docs.evmos.org/validate/upgrades).
 
 Check the [EVM](https://github.com/evmos/evmos/blob/ceae6608955f1279546066dad1a53a53593790cd/proto/ethermint/evm/v1/evm.proto#L11-L34) and [feemarket](https://github.com/evmos/evmos/blob/ceae6608955f1279546066dad1a53a53593790cd/proto/ethermint/feemarket/v1/feemarket.proto#L12-L44) module parameters for an overview of the fields to set with the desired values.
+
+
+***
 
 ## 👨‍💻 CLI Configuration
 
@@ -405,6 +437,9 @@ There is a selection of different CLI commands that are unique to the evmOS code
 - `appd debug` and its subcommands provide useful utilities for address conversion and other debugging / development related purposes: https://github.com/evmos/evmos/blob/v18.1.0/client/debug/debug.go#L28-L42.
 - `appd block` exports the last block from the database of the node (instead of querying from network): https://github.com/evmos/evmos/blob/v18.1.0/client/block/block.go#L15-L72.
 - `appd add-genesis-account` can be used as a reference for add new accounts to a given genesis JSON file: https://github.com/evmos/evmos/blob/v18.1.0/cmd/evmosd/genaccounts.go#L39-L285. Note, that this usually is reimplemented for every chain’s specific use-case.
+
+
+***
 
 ## 🔏 EIP-712 Encoding
 
@@ -455,7 +490,8 @@ To do so, include the following command in the initialization of the root comman
     	// ...
     )
     ```
-    
+
+***
 
 ## 💽 Ledger Integration
 
@@ -476,6 +512,8 @@ Additionally, the keyring options should be adjusted to defer the Ledger support
 https://github.com/evmos/os/blob/cff4d2a/crypto/keyring/options.go#L16-L47
 
 This has to replicated / imported into any customer repositories that desire to exhibit the same behavior.
+
+***
 
 # 🔭 What’s Next?
 
