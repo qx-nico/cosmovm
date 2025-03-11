@@ -18,7 +18,7 @@ function Home() {
           <div className="container">
             <div className="row cards__container">
               <Card
-                to="./start-here"
+                to="./integrate"
                 header={{
                   label: "Integrate Cosmos EVM",
                 }}
