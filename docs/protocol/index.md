@@ -2,6 +2,8 @@
 sidebar_position: 0
 ---
 
+**Welcome to Cosmos EVM protocol documentation!** This documents are in maintenance, due to the recent migration from evmOS to the maintenance of this fork by the Interchain Labs team.
+
 # Technical Architecture
 
 Evmos is a scalable Proof-of-Stake blockchain that is fully compatible and
