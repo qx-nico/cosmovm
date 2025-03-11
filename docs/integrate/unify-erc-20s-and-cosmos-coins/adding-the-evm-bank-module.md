@@ -32,34 +32,4 @@ func ProvideEVMExtensions(
 
 Furthermore, it is required to **enable the bank EVM extension in the EVM module parameters**. This can be done through a corresponding module upgrade proposal that goes through governance. However, since it is required that the introduction of this feature goes hand in hand with a chain upgrade, we recommend to just enable the extension during the upgrade process as well by creating a dedicated upgrade handler.
 
-An example to enable an EVM extension in an upgrade handler is shown here: [// app/upgrades/vX/upgrades.go
-package vX
-
-import (
-	...
-)
-
-// CreateUpgradeHandler creates an SDK upgrade handler for vX
-func CreateUpgradeHandler(
-	mm *module.Manager,
-	configurator module.Configurator,
-	ek *evmkeeper.Keeper,
-) upgradetypes.UpgradeHandler {
-	return func(ctx sdk.Context, _ upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
-		logger := ctx.Logger().With("upgrade", UpgradeName)
-		
-		// Add staking EVM extension to active static precompiles parameter
-		params := ek.GetParams(ctx)
-		params.ActiveStaticPrecompiles = append(
-			params.ActiveStaticPrecompiles,
-			evmtypes.StakingPrecompileAddress,
-		)
-		if err := ek.SetParams(ctx, params); err != nil {
-			logger.Error("error enabling staking evm extension", "error", err)
-		}
-		
-		// Run module migrations
-		return mm.RunMigrations(ctx, configurator, vm)
-	}
-
 An example to enable an EVM extension in an upgrade handler is shown here: https://altiplanic.notion.site/Enable-EVM-Extensions-81f1186d25ec4c7a8fd951e644c6802c#be2260f3b3734d4b8b44532fe2898b1a
