@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 # Integrate into a Cosmos SDK Chain
@@ -562,6 +562,6 @@ After onboarding to Cosmos EVM your chain now has a proven EVM implementation av
 
 This amazing new experience can be improved even more:
 
-- [Unify ERC-20s and Cosmos Coins](https://www.notion.so/Unify-ERC-20s-and-Cosmos-Coins-431b2ea75c7e486b9ce9a127f449897b?pvs=21) with the *Single Token Representation v2*.
-- [Enable EVM Extensions](https://www.notion.so/Enable-EVM-Extensions-81f1186d25ec4c7a8fd951e644c6802c?pvs=21) or add your own custom implementations, that let smart contract developers and EVM users access your Cosmos SDK module functionality! More information can be found here: https://evm.cosmos.network/develop/smart-contracts/evm-extensions.
-- Add more functionality from the https://evm.cosmos.network/protocol/modules.
+- Unify ERC-20s and Cosmos Coins with the *Single Token Representation v2*.
+- Enable EVM Extensions or add your own custom implementations, that let smart contract developers and EVM users access your Cosmos SDK module functionality! More information can be found here: https://evm.cosmos.network/develop/smart-contracts/evm-extensions.
+- Add more functionality from the https://evm.cosmos.network/protocol/modules

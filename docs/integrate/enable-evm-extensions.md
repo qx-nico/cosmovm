@@ -1,8 +1,8 @@
 ---
-sidebar_position: 1
+sidebar_position: 3
 ---
 
-# Integrate into a Cosmos SDK Chain
+# Enable EVM Extensions
 
 This guide will help you integrate onto a Cosmos SDK - based chain.
 
