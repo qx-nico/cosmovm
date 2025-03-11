@@ -21,7 +21,7 @@ function defineSection(section, options = {}) {
 }
 
 const SECTIONS = [
-  defineSection('start-here'),
+  defineSection('integrate'),
   defineSection('develop'),
   defineSection('protocol'),
 //  defineSection('validate'),
@@ -141,7 +141,7 @@ const config = {
           {
             position: 'left',
             label: 'Integrate',
-            to: '/start-here',
+            to: '/integrate',
           },
           {
             position: 'left',

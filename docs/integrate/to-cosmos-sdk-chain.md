@@ -1,5 +1,5 @@
 ---
-sidebar_position: 0
+sidebar_position: 1
 ---
 
 # Integrate into a Cosmos SDK Chain
@@ -8,18 +8,22 @@ sidebar_position: 0
 
 It serves as a guiding framework to help you along the way of introducing the Cosmos ecosystem’s battle-tested EVM solution into your own blockchain.
 
-# ☑️ Prerequisites
 
+# ☑️ Prerequisites
+<details>
+  <summary>What you need to start</summary>
 In order to ensure a smooth integration, we recommend to align the major dependencies with the desired version of evmOS that should be integrated. The main dependencies that should have the required version before integrating evmOS are:
 
-- **Cosmos SDK** (check the used version of [evmOS’ fork](https://github.com/evmos/cosmos-sdk/releases))
+- **Cosmos SDK** (check the used version of [Cosmos EVM fork](https://github.com/cosmos/cosmos-sdk/tree/state-copy-fork))
 - **IBC-Go**
-- (if applicable) **Go-Ethereum** (check the used version of [evmOS’ fork](https://github.com/evmos/go-ethereum))
+- (if applicable) **Go-Ethereum** (check the used version of [Cosmos EVM fork](https://github.com/cosmos/go-ethereum))
 
-<aside>
-⚠️ If there are breaking changes introduced we strongly suggest to run a corresponding chain upgrade to include these versions before working on the evmOS integration.
+> *⚠️ If there are breaking changes introduced we strongly suggest to run a corresponding chain upgrade to include these versions before working on the Cosmos EVM integration.*
 
-</aside>
+</details>
+
+
+***
 
 # 🧩 Integration
 
