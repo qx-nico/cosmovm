@@ -21,10 +21,10 @@ function defineSection(section, options = {}) {
 }
 
 const SECTIONS = [
-  defineSection('develop'),
-  defineSection('validate'),
-  defineSection('protocol'),
   defineSection('start-here'),
+  defineSection('develop'),
+  defineSection('protocol'),
+  defineSection('validate'),
 ];
 
 /** @type {import('@docusaurus/types').Config} */
@@ -140,13 +140,13 @@ const config = {
         items: [
           {
             position: 'left',
-            label: 'Develop',
-            to: '/develop',
+            label: 'Integrate',
+            to: '/start-here',
           },
           {
             position: 'left',
-            label: 'Validate',
-            to: '/validate',
+            label: 'Develop',
+            to: '/develop',
           },
           {
             position: 'left',
@@ -155,8 +155,8 @@ const config = {
           },
           {
             position: 'left',
-            label: 'start-here',
-            to: '/start-here',
+            label: 'Validate',
+            to: '/validate',
           },
           {
             position: 'right',
