@@ -247,13 +247,13 @@ This is required to account for the different approaches to e.g. handling gas pa
 
 Specifically, our implementation relies on the corresponding signature verification handlers ([EVM](https://github.com/evmos/evmos/blob/main/app/ante/evm/05_signature_verification.go#L58), [Cosmos](https://github.com/evmos/evmos/blob/main/app/ante/sigverify.go#L37) & [EIP-712 Cosmos Messages](https://github.com/evmos/evmos/blob/main/app/ante/cosmos/eip712.go#L61)) and the custom logic to [deduct fees](https://github.com/evmos/evmos/blob/main/app/ante/evm/fee_checker.go#L20-L41), which is dependent on our implementation of the EIP-1559 and will have to be implemented on the customer chains.
 
-### 🔹**EVM Ante Handler**
+## 🔹EVM Ante Handler
 
 In order to evaluate the validity of EVM transactions, we have implemented all checks within a “mono” ante handler as opposed to the more common concept of chaining multiple individual ante decorators as commonly done in the Cosmos SDK.
 
 This implementation helps reduce the overhead of repeated queries and type conversions of necessary input data for the given checks. Therefore, we encourage partner chains to also adopt this workflow and build a singular ante handler for EVM transactions based on the helper methods that we are providing in our code base.
 
-### ⚛️ **Cosmos Ante Handler**
+### Cosmos Ante Handler
 
 The standard Cosmos SDK messages are handled with common ante decorators used by many chains. We do extend the standard ante handling flow by rejecting any transactions that contain `MsgEthereumTx` in them ([here](https://github.com/evmos/evmos/blob/main/app/ante/cosmos.go#L19)) and also limit operations that can be delegated to other accounts ([here](https://github.com/evmos/evmos/blob/main/app/ante/cosmos.go#L20-L23)).
 
