@@ -252,10 +252,10 @@ const config = {
       ],
       algolia: {
         // The application ID provided by Algolia
-        appId: 'DPTADG0ME1',
+        appId: 'IEET1JIXIY',
   
         // Public API key: it is safe to commit it
-        apiKey: 'fbbcf85b58f500e5e4d301f9730f3526',
+        apiKey: '9278938f3473a22479c18c8079e2e6b5',
   
         indexName: 'cosmosevmdocs',
   
