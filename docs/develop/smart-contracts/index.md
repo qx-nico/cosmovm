@@ -29,15 +29,15 @@ Since it is the most widely used smart contract programming language in Blockcha
 Solidity comes with well-documented and rich language support.
 Head over to our list of Tools and IDE Plugins to help you get started.
 
-### EVM Extensions
+### Cosmos EVM Precompiles
 
-EVM Extensions are precompiled contracts that are built into the Ethereum Virtual Machine (EVM).
+EVM precompiles are precompiled contracts that are built into the Ethereum Virtual Machine (EVM).
 Each offers specific functionality, that can be used by other smart contracts.
 Generally, they are used to perform operations that are either not possible
 or would be too expensive to perform with a regular smart contract
 implementation, such as hashing, elliptic curve cryptography, and modular exponentiation.
 
-By adding custom EVM extensions to Ethereum's basic feature set,
+By adding custom EVM precompiles to Ethereum's basic feature set,
 Cosmos EVM allows developers to use previously unavailable functionality in smart contracts, like staking and governance operations.
 This will allow more complex smart contracts to be built on a Cosmos EVM chain
 and further improves the interoperability between Cosmos and Ethereum.
@@ -49,7 +49,7 @@ which can only read state information.
 This is necessary because an operation like e.g. staking tokens
 will ultimately change the chain state.
 
-View a list of available evm extensions [here](./list-evm-extensions.md).
+View a list of available EVM precompiles [here](./list-precompiles.md).
 
 ## Deploy with Ethereum JSON-RPC
 
@@ -64,10 +64,3 @@ to view and debug interactions with your smart contracts deployed on a Cosmos EV
 Block explorers index blocks and their transactions
 so that you can search for real-time and historical information about the blockchain,
 including data related to blocks, transactions, addresses, and more.
-
-### Contract Verification
-
-Once deployed, smart contract data is deployed as non-human readable EVM bytecode.
-You can use [contract verification tools](./tools/contract-verifications)
-that publish and verify your original Solidity code
-to prove to users that they are interacting with the correct smart contract.

@@ -2,7 +2,7 @@
 
 ## Abstract
 
-This document specifies the internal `x/epochs` module of the Evmos Hub.
+This document specifies the internal `x/epochs` module in the Cosmos SDK.
 
 Often, when working with the [Cosmos SDK](https://github.com/cosmos/cosmos-sdk),
 we would like to run certain pieces of code every so often.
@@ -25,7 +25,7 @@ So, another module can specify it wants to execute certain code once a week, sta
 ## Concepts
 
 The `epochs` module defines on-chain timers that execute at fixed time intervals.
-Other Evmos modules can then register logic to be executed at the timer ticks.
+Other Cosmos modules can then register logic to be executed at the timer ticks.
 We refer to the period in between two timer ticks as an "epoch".
 
 Every timer has a unique identifier, and every epoch will have a start time and an end time,

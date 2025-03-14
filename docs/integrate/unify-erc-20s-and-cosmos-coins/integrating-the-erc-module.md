@@ -44,13 +44,13 @@ func NewApp(
 
 **EVM Keeper**
 
-To support the Single Token Representation v2, it is also required to pass the ERC-20 module keeper into the [instantiation of the EVM keeper](https://github.com/evmos/evmos/blob/v19.0.0/app/app.go#L441-L447).
+To support the Single Token Representation v2, it is also required to pass the ERC-20 module keeper into the [instantiation of the EVM keeper](https://github.com/cosmos/evm/blob/v19.0.0/app/app.go#L441-L447).
 
 ```go
 	evmKeeper := evmkeeper.NewKeeper(
 		appCodec, keys[evmtypes.StoreKey], tkeys[evmtypes.TransientKey], authtypes.NewModuleAddress(govtypes.ModuleName),
 		app.AccountKeeper, app.BankKeeper, stakingKeeper, app.FeeMarketKeeper,
-		// ERC-20 keeper is passed here for ERC-20 EVM extensions
+		// ERC-20 keeper is passed here for ERC-20 Cosmos EVM precompile
 		&app.Erc20Keeper,
 		tracer, app.GetSubspace(evmtypes.ModuleName),
 	)
@@ -197,9 +197,9 @@ It’s required to add the corresponding ERC-20 module’s store key to the slic
 import (
 	// ...
 	
-	erc20types "github.com/evmos/evmos/v19/x/erc20/types"
-	evmtypes "github.com/evmos/evmos/v19/x/evm/types"
-	feemarkettypes "github.com/evmos/evmos/v19/x/feemarket/types"
+	erc20types "github.com/cosmos/evm/v19/x/erc20/types"
+	evmtypes "github.com/cosmos/evm/v19/x/evm/types"
+	feemarkettypes "github.com/cosmos/evm/v19/x/feemarket/types"
 )
 
 keys := sdk.NewKVStoreKeys(

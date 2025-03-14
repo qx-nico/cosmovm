@@ -6,7 +6,7 @@ sidebar_position: 4
 
 To enable existing Cosmos coins to be used with STR v2, it is required to register them as token pairs in the ERC-20 keeper and to add the corresponding smart contract address to the slice of active dynamic precompiles in the ERC-20 module parameters.
 
-*Dynamic precompiles* are those EVM extensions that are deployed interactively depending on the network state. This discerns them from the *static* precompiles, which are not dependent on the network state but rather always instantiated (e.g. the staking extension).
+*Dynamic precompiles* are those that are deployed interactively depending on the network state. This discerns them from the *static* precompiles, which are not dependent on the network state but rather always instantiated (e.g. the staking precompile).
 
 There are two required parts to enable the transaction flow involving STR v2—integrating the corresponding IBC middleware as well as running the required upgrade logic, that is either introducing the ERC-20 module to the chain or migrating the existing token pairs that may already be present on a given chain.
 
@@ -14,7 +14,7 @@ There are two required parts to enable the transaction flow involving STR v2—i
 
 To reduce the manual labor required to handle STR v2 and to enable an autonomous flow of data, we have introduced an IBC middleware, that wraps the transfer module to provide two distinct use cases when it comes to the handling of ERC-20 tokens and Cosmos coins:
 
-1. Incoming IBC coins, that are not yet registered as a token pair with the ERC-20 module are automatically added as such. Additionally, there is a new dynamic EVM extension created and added to the parameters in the ERC-20 module for the STR v2 to immediately work without further configuration.
+1. Incoming IBC coins, that are not yet registered as a token pair with the ERC-20 module are automatically added as such. Additionally, there is a new dynamic precompiles created and added to the parameters in the ERC-20 module for the STR v2 to immediately work without further configuration.
     
     This enables a smooth user experience, where new IBC coins are directly useable in both Cosmos and EVM transactions, while this can be controlled afterwards using governance in case a harmful coin should be exempted from STR v2.
     
@@ -72,15 +72,15 @@ In case the ERC-20 module has already been integrated in the given chain it will
 
 ### Migration of existing Cosmos token pairs
     
-    The required migration for existing coins was done during the Evmos v19.0.0 chain upgrade and the reference implementation can be found here: https://github.com/evmos/evmos/blob/v19.0.0/app/upgrades/v19/upgrades.go#L37-L75.
+    The required migration for existing coins was done during the Evmos v19.0.0 chain upgrade and the reference implementation can be found here: https://github.com/cosmos/evm/blob/v19.0.0/app/upgrades/v19/upgrades.go#L37-L75.
     
     In short, the required steps are:
     
     1. Running the module migrations to introduce the new parameters.
     2. Create token pairs for the native chain’s denomination(s) and get the list of existing token pairs that are native Cosmos/IBC coins.
     3. Convert all existing assets that are currently stored in their ERC-20 representation back to Cosmos coins.
-    4. Register dynamic EVM extensions for each of the affected token pairs
-    5. Delete the smart contract at the original Hex address, which will now be replaced with the corresponding EVM extension.
+    4. Register dynamic precompiles for each of the affected token pairs
+    5. Delete the smart contract at the original Hex address, which will now be replaced with the corresponding precompile.
 
 Alternatively, if the ERC-20 module is newly added to a given chain to enable this feature, the corresponding store upgrades will have to be conducted to add the ERC-20 module.
 

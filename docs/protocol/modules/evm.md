@@ -1335,7 +1335,7 @@ If disabled, this delegates control of replay protection to the individual nodes
 
 ### Active Precompiles
 
-This parameter governs which [EVM Extensions](../../develop/smart-contracts/evm-extensions/evm-extensions.md)
+This parameter governs which [EVM Precompiles](../../develop/smart-contracts/cosmos-sdk-precompiles/)
 are enabled on the given network.
 It accepts a list of addresses in Hex format,
 which is evaluated in EVM transactions to only allow interactions
