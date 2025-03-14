@@ -42,7 +42,7 @@ To start off, the necessary module imports need to be added to the `go.mod` file
     Add the corresponding module import for the desired version of Cosmos EVM to the go module file.
     
     ```bash
-    go get github.com/cosmos/cosmos-evm/v19.1.0
+    go get github.com/cosmos/evm/v19.1.0
     #                              ^ --- adjust version to desired one
     ```
     
@@ -169,7 +169,7 @@ In case, that only the default Ethereum behavior is desired, the instantiation c
 		evmtypes "github.com/evmos/evmos/v19/x/evm/types"
 		feemarketkeeper "github.com/evmos/evmos/v19/x/feemarket/keeper"
 		feemarkettypes "github.com/evmos/evmos/v19/x/feemarket/types"
-		srvflags "github.com/cosmos/cosmos-evm/server/flags"
+		srvflags "github.com/cosmos/evm/server/flags"
 	)
 	
 	// Cosmos EVM keepers
@@ -295,7 +295,7 @@ In the standard approach to building a Cosmos SDK-based chain, this configuratio
 import (
 	// ...
 	serverconfig "github.com/cosmos/cosmos-sdk/server/config"
-	cevmserverconfig "github.com/cosmos/cosmos-evm/server/config"
+	cevmserverconfig "github.com/cosmos/evm/server/config"
 )
 
 func initAppConfig() (string, interface{}) {
@@ -366,7 +366,7 @@ The short of it is, that it is required to add support for this signing algorith
 // cmd/root.go
 import (
 	// ...
-	cvmencoding "https://github.com/cosmos/cosmos-evm/encoding"
+	cvmencoding "https://github.com/cosmos/evm/encoding"
 )
 
 func NewRootCmd() *cobra.Command {
@@ -477,7 +477,7 @@ To do so, include the following command in the initialization of the root comman
     // cmd/root.go
     import (
     	// ...
-    	cevmencoding "https://github.com/cosmos/cosmos-evm/v18/encoding"
+    	cevmencoding "https://github.com/cosmos/evm/v18/encoding"
     	cevmeip712 "github.com/cosmos/cosmos/evm/ethereum/eip712"
     )
     
@@ -499,7 +499,7 @@ To do so, include the following command in the initialization of the root comman
     import (
     	// ...
     	cevmencoding "https://github.com/evmos/evmos/v18/encoding"
-    	cevmeip712 "github.com/cosmos/cosmos-evm/ethereum/eip712"
+    	cevmeip712 "github.com/cosmos/evm/ethereum/eip712"
     )
     
     func NewExampleApp(
@@ -534,7 +534,7 @@ initClientCtx := client.Context{}.
 	WithLedgerHasProtobuf(true) // support for Ledger
 ```
 
-Additionally, the keyring options should be adjusted to defer the Ledger support from the default Cosmos SDK application to the Ethereum one: https://github.com/cosmos/cosmos-evm/blob/cff4d2a/crypto/keyring/options.go#L16-L47
+Additionally, the keyring options should be adjusted to defer the Ledger support from the default Cosmos SDK application to the Ethereum one: https://github.com/cosmos/evm/blob/cff4d2a/crypto/keyring/options.go#L16-L47
 
 This has to replicated / imported into any customer repositories that desire to exhibit the same behavior.
 

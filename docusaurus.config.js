@@ -174,7 +174,7 @@ const config = {
             to: 'https://cosmos.network/',
           },
           {
-            href: 'https://github.com/cosmos/cosmos-evm/',
+            href: 'https://github.com/cosmos/evm/',
             className: 'pseudo-icon github-icon',
             position: 'right',
           },

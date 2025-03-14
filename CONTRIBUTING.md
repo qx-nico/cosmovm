@@ -26,7 +26,7 @@ discover this new information?
 
 The process to contribute is simple. Make sure you have a Github account and have the repository cloned. Any changes should
 be made in the form of a Pull Request. Make sure to use descriptive titles and descriptions to aid in the review process.
-Any physical code changes to the core protocol should be made with the [Cosmos EVM Repo](https://github.com/cosmos/cosmos-evm/) and
+Any physical code changes to the core protocol should be made with the [Cosmos EVM Repo](https://github.com/cosmos/evm/) and
 make sure to submit both code and docs changes at the same time.
 
 If there are a large scale changes, re-index might be necessary. We use Algolia DocSearch to power our search. It might
