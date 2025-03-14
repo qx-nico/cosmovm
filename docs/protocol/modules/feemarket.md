@@ -63,7 +63,7 @@ which covers both the priority fee and the block's network fee per gas (aka: bas
 :::tip
 The Cosmos SDK uses a different terminology for `gas` than Ethereum.
 What is called `gasLimit` on Ethereum is called `gasWanted` on Cosmos.
-You might encounter both terminologies on Evmos since it builds Ethereum on top of the SDK,
+You might encounter both terminologies in the Cosmos EVM since it builds Ethereum on top of the SDK,
 e.g. when using different wallets like Keplr for Cosmos and Metamask for Ethereum.
 :::
 
@@ -89,10 +89,8 @@ is an additional gas price that can be added to the `baseFee` in order to incent
 The higher the tip, the more likely the transaction is included in the block.
 
 Until the Cosmos SDK version v0.46, however, there is no notion of transaction prioritization.
-Thus, the tip for an EIP-1559 transaction on Evmos should be zero
+Thus, the tip for an EIP-1559 transaction on a Cosmos EVM chain should be zero
 (`MaxPriorityFeePerGas` JSON-RPC endpoint returns `0`).
-Have a look at the [mempool](https://docs.evmos.org/validate/setup-and-configuration/mempool) docs
-to read more about how to leverage transaction prioritization.
 
 ### Effective Gas price
 
@@ -267,14 +265,14 @@ The `x/feemarket` module contains the following parameters:
 
 ### CLI
 
-A user can query and interact with the `feemarket` module using the CLI.
+A user can query and interact with the `feemarket` module using the CLI.
 
 #### Queries
 
-The `query` commands allow users to query `feemarket` state.
+The `query` commands allow users to query `feemarket` state.
 
 ```bash
-evmosd query feemarket --help
+simd query feemarket --help
 ```
 
 ##### Base Fee
@@ -282,13 +280,13 @@ evmosd query feemarket --help
 The `base-fee` command allows users to query the block base fee by height.
 
 ```bash
-evmosd query feemarket base-fee [flags]
+simd query feemarket base-fee [flags]
 ```
 
 Example:
 
 ```bash
-evmosd query feemarket base-fee ...
+simd query feemarket base-fee ...
 ```
 
 Example Output:
@@ -302,13 +300,13 @@ base_fee: "512908936"
 The `block-gas` command allows users to query the block gas by height.
 
 ```bash
-evmosd query feemarket block-gas [flags]
+simd query feemarket block-gas [flags]
 ```
 
 Example:
 
 ```bash
-evmosd query feemarket block-gas ...
+simd query feemarket block-gas ...
 ```
 
 Example Output:
@@ -322,13 +320,13 @@ gas: "21000"
 The `params` command allows users to query the module params.
 
 ```bash
-evmosd query params subspace [subspace] [key] [flags]
+simd query params subspace [subspace] [key] [flags]
 ```
 
 Example:
 
 ```bash
-evmosd query params subspace feemarket ElasticityMultiplier ...
+simd query params subspace feemarket ElasticityMultiplier ...
 ```
 
 Example Output:

@@ -2,12 +2,10 @@
 sidebar_position: 0
 ---
 
-**Welcome to Cosmos EVM protocol documentation!** This documents are in maintenance, due to the recent migration from evmOS to the maintenance of this fork by the Interchain Labs team.
-
 # Technical Architecture
 
-Evmos is a scalable Proof-of-Stake blockchain that is fully compatible and
-interoperable with the Ethereum Virtual Machine (EVM). It is built using the [Cosmos SDK](https://github.com/cosmos/cosmos-sdk/)
+Cosmos EVM is a framework that allows you to add Ethereum Virtual Machine (EVM) compatibility to any Cosmos SDK-based chain.
+It is built using the [Cosmos SDK](https://github.com/cosmos/cosmos-sdk/)
 which runs on top of the [CometBFT](https://github.com/cometbft/cometbft)
 (a fork of [Tendermint Core](https://docs.tendermint.com/)) consensus engine,
 to accomplish fast finality, high transaction throughput and short block times (~2 seconds).
@@ -16,7 +14,7 @@ This architecture allows users to perform both Cosmos and EVM formatted transact
 developers to scale EVM dApps cross-chain via [IBC](https://cosmos.network/ibc),
 and tokens and assets in the network to come from different independent sources.
 
-Evmos enables these key features by:
+Cosmos EVM enables these key features by:
 
 * Leveraging [modules](https://docs.cosmos.network/v0.47/build/building-modules/intro)
 and other mechanisms implemented by the [Cosmos SDK](https://docs.cosmos.network/).
@@ -32,10 +30,8 @@ software to seamlessly deploy smart contracts which interact with the rest of th
 
 ## Cosmos SDK
 
-Evmos enables the full composability and modularity of the [Cosmos SDK](https://docs.cosmos.network/).
-As a Cosmos chain, Evmos is a sovereign blockchain with its own native token,
-that can connect to other chains through IBC. It includes standard modules from the Cosmos SDK,
-that work side to side with Evmos-specific modules, built by the Evmos core development team.
+Cosmos EVM enables the full composability and modularity of the [Cosmos SDK](https://docs.cosmos.network/).
+It includes standard modules from the Cosmos SDK that work side to side with EVM-specific modules.
 Check out the [list of modules](modules/index.md) to get an overview of what each module is responsible for.
 
 ## CometBFT & ABCI
@@ -50,8 +46,8 @@ enables the transactions to be processed in any programming language.
 CometBFT has evolved to be a general-purpose blockchain consensus engine that
 can host arbitrary application states. Since it can replicate arbitrary
 applications, it can be used as a plug-and-play replacement for the consensus
-engines of other blockchains. Evmos is an example of an ABCI application
-replacing Ethereum's PoW via CometBFT's consensus engine.
+engines of other blockchains. Cosmos EVM is an example of an ABCI application
+replacing Ethereum's PoS via CometBFT's consensus engine.
 
 Another example of a cryptocurrency application built on CometBFT is the Cosmos
 network. CometBFT can decompose the blockchain design by offering a very
@@ -59,7 +55,7 @@ simple API (ie. the ABCI) between the application process and consensus process.
 
 ## EVM Compatibility
 
-Evmos enables EVM compatibility by implementing various components
+Cosmos EVM enables EVM compatibility by implementing various components
 that together support all the EVM state transitions
 while ensuring the same developer experience as Ethereum:
 
@@ -72,7 +68,7 @@ Most components are implemented in the [EVM module](modules/evm.md)
 To achieve a seamless developer UX, however, some of the components are implemented
 outside of the module.
 
-If you want to learn more about how Evmos achieves EVM compatibility as a Cosmos chain,
+If you want to learn more about how Cosmos EVM achieves EVM compatibility as a Cosmos chain,
 we recommend understanding the following concepts:
 
 * [Accounts](./concepts/accounts.md)
@@ -82,13 +78,5 @@ we recommend understanding the following concepts:
 
 ## Contributing
 
-There are several ways to contribute to the Evmos core protocol. To get some hands-on experience,
-we recommend you spin up a local Evmos node using the [Evmos CLI](./protocol/evmos-cli)
-and interact with it through queries and transactions using the supported [clients](../develop/api#clients).
-
-Then if you're hooked you can
-
-* Contribute open-source to [issues on GitHub](https://github.com/evmos/evmos/issues)
-using the [Evmos Contributor Guideline](https://github.com/evmos/evmos/blob/main/CONTRIBUTING.md)
-* Apply to [open positions at Evmos](https://boards.eu.greenhouse.io/evmos)
-* Search for [bugs and earn a bounty](bugs.md)
+You can contribute to the Cosmos EVM's open-source codebase through [issues on GitHub](https://github.com/cosmos/evm/issues)
+using the [Cosmos EVM Contributor Guideline](https://github.com/cosmos/evm/blob/main/CONTRIBUTING.md)

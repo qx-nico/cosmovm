@@ -4,9 +4,9 @@ sidebar_position: 4
 
 # Gas and Fees
 
-Users need to pay a fee to submit transactions on the Evmos network.
+Users need to pay a fee to submit transactions on a Cosmos EVM-based blockchain.
 As fees are handled differently on Ethereum and Cosmos,
-it is important to understand how the Evmos blockchain implements an Ethereum-type fee calculation,
+it is important to understand how a Cosmos EVM blockchain implements an Ethereum-type fee calculation,
 that is compatible with the Cosmos SDK.
 
 Therefore this overview explains the basics of gas calculation,
@@ -139,20 +139,20 @@ More on Ethereum Fees:
 
 ## Implementation
 
-### How are Gas and Fees Handled on Evmos?
+### How are Gas and Fees Handled in the Cosmos EVM?
 
-Fundamentally, Evmos is a Cosmos SDK chain that enables EVM compatibility as part of a Cosmos SDK module. As a result of
- this architecture, all EVM transactions are ultimately encoded as Cosmos SDK transactions and update a Cosmos
+Fundamentally, a Cosmos EVM chain is a Cosmos SDK chain that enables EVM compatibility as part of a Cosmos SDK module.
+As a result of this architecture, all EVM transactions are ultimately encoded as Cosmos SDK transactions and update a Cosmos
  SDK-managed state.
 
 Since all transactions are represented as Cosmos SDK transactions, transaction fees can be treated identically across
 execution layers. In practice, dealing with fees includes standard Cosmos SDK logic, some Ethereum logic, and custom
-Evmos logic. For the most part, fees are collected by the `fee_collector` module, then paid out to validators and
+Cosmos EVM logic. For the most part, fees are collected by the `fee_collector` module, then paid out to validators and
 delegators. A few key distinctions are as follows:
 
 1. Fee Market Module
 
-    In order to support EIP-1559 gas and fee calculation on Evmos’ EVM layer, Evmos tracks the gas supplied for each
+    In order to support EIP-1559 gas and fee calculation on the EVM layer, Cosmos EVM tracks the gas supplied for each
     block and uses that to calculate a base fee for future EVM transactions, thus enabling EVM dynamic fees and
     transaction prioritization as specified by EIP-1559.
 
@@ -161,14 +161,15 @@ delegators. A few key distinctions are as follows:
      surplus is considered a priority tip. This allows validators to compute Ethereum fees without applying Cosmos SDK
      fee logic.
 
-    Unlike on Ethereum, the `BaseFee` on Evmos is not burned, and instead is distributed to validators and delegators.
-    Furthermore, the `BaseFee` is lower-bounded by the global `min-gas-price` (currently, the global `min-gas-price`
+    Unlike on Ethereum, the `BaseFee` on a Cosmos EVM chain is not burned, and instead is distributed to validators and
+    delegators by default, although this can be adjusted. Furthermore, the `BaseFee` is lower-bounded by the global
+    `min-gas-price` (currently, the global `min-gas-price`
     parameter is set to zero, although it can be updated via Governance).
 
 2. EVM Gas Refunds
 
-    Evmos refunds a fraction (at least 50% by default) of the unused gas for EVM transactions to approximate the current
-    behavior on Ethereum. [Why not always 100%?](https://github.com/evmos/ethermint/issues/1085)
+    Cosmos EVM refunds a fraction (at least 50% by default) of the unused gas for EVM transactions to approximate the current
+    behavior on Ethereum. This too can be adjusted.
 
 ### Detailed Timeline
 
@@ -177,10 +178,10 @@ delegators. A few key distinctions are as follows:
     on this block. This will be used for the next block’s `BaseFee`.
 2. Nodes receive transactions for a subsequent block and gossip these transactions to peers
     * These can be sorted and prioritized by the included fee price (using EIP-1559 fee priority mechanics for EVM
-    transactions - [code snippet](https://github.com/evmos/ethermint/blob/57ed355c985d9f3116aba6aabfa2ee0f3f38e966/app/ante/eth.go#L137)),
+    transactions - [code snippet](https://github.com/cosmos/evm/blob/57ed355c985d9f3116aba6aabfa2ee0f3f38e966/app/ante/eth.go)),
      to be included in the next block
 3. Nodes run `BeginBlock` for the subsequent block
-    * The FeeMarket module calculates the `BaseFee` ([code snippet](https://github.com/evmos/ethermint/blob/89fdd1984826ea524cb9b8feb089a99b6cfe8ace/x/feemarket/keeper/abci.go#L14))
+    * The FeeMarket module calculates the `BaseFee` ([code snippet](https://github.com/cosmos/evm/blob/89fdd1984826ea524cb9b8feb089a99b6cfe8ace/x/feemarket/keeper/abci.go))
      to be applied for this block using the total `GasWanted` from the previous block.
     * The Distribution module [distributes](https://docs.cosmos.network/main/modules/distribution#begin-block) the
     previous block’s fee rewards to validators and delegators
@@ -219,8 +220,8 @@ More information regarding gas as part of the Cosmos SDK can be found [here](htt
 
 ### Matching EVM Gas consumption
 
-Evmos is an EVM-compatible chain that supports Ethereum Web3 tooling. For this reason, gas consumption must be equatable
- with other EVMs, most importantly Ethereum.
+Cosmos EVM supports Ethereum Web3 tooling. For this reason, gas consumption must be equatable with other EVMs, most
+importantly Ethereum.
 
 The main difference between EVM and Cosmos state transitions, is that the EVM uses a [gas table](https://github.com/ethereum/go-ethereum/blob/master/params/protocol_params.go)
  for each OPCODE, whereas Cosmos uses a `GasConfig` that charges gas for each CRUD operation by setting a flat and
@@ -234,7 +235,7 @@ In order to match the gas consumed by the EVM, the gas consumption logic from th
 To ignore the SDK gas consumption, we reset the transaction `GasMeter` count to 0 and manually set it to the `gasUsed`
  value computed by the EVM module at the end of the execution.
 
-+++ https://github.com/evmos/ethermint/blob/098da6d0cc0e0c4cefbddf632df1057383973e4a/x/evm/keeper/state_transition.go#L188
++++ https://github.com/cosmos/evm/blob/098da6d0cc0e0c4cefbddf632df1057383973e4a/x/evm/keeper/state_transition.go
 
 ### `AnteHandler`
 
@@ -261,16 +262,16 @@ by the validators of the network, and each validator can specify a different min
 This potentially allows end users to submit 0 fee transactions if there is at least one single
 validator that is willing to include transactions with `0` gas price in their blocks proposed.
 
-For this same reason, in Evmos it is possible to send transactions with `0` fees for transaction
+For this same reason, in the Cosmos EVM it is possible to send transactions with `0` fees for transaction
 types other than the ones defined by the `evm` module. EVM module transactions cannot have `0` fees
 as gas is required inherently by the EVM. This check is done by the EVM transactions stateless validation
-(i.e `ValidateBasic`) function as well as on the custom `AnteHandler` defined by Evmos.
+(i.e `ValidateBasic`) function as well as on the custom `AnteHandler` defined by Cosmos EVM.
 
 ### Gas Estimation
 
 Ethereum provides a JSON-RPC endpoint `eth_estimateGas` to help users set up a correct gas limit in their transactions.
 
-For that reason, a specific query API `EstimateGas` is implemented in Evmos. It will apply the transaction against the
+For that reason, a specific query API `EstimateGas` is implemented in the Cosmos EVM. It will apply the transaction against the
 current block/state and perform a binary search in order to find the optimal gas value to return to the user (the same
 transaction will be applied over and over until we find the minimum gas needed before it fails). The reason we need to
  use a binary search is that the gas required for the
@@ -279,29 +280,29 @@ we find the optimal value.
 
 A cache context will be used during the whole execution to avoid changes be persisted in the state.
 
-+++ https://github.com/evmos/ethermint/blob/098da6d0cc0e0c4cefbddf632df1057383973e4a/x/evm/keeper/grpc_query.go#L100
++++ https://github.com/cosmos/evm/blob/098da6d0cc0e0c4cefbddf632df1057383973e4a/x/evm/keeper/grpc_query.go
 
 For Cosmos Tx's, developers can use Cosmos SDK's [transaction simulation](https://docs.cosmos.network/main/run-node/txs#simulating-a-transaction)
  to create an accurate estimate.
 
 ### Cross-Chain Gas and Fees
 
-Let’s say a user transfers tokens from Chain A to Evmos via IBC-transfer and wants to execute an Evmos transaction—however,
- they don’t have any Evmos tokens to cover fees. The Cosmos SDK introduced `Tips` as a solution to this issue; a user can
-  cover fees using a different token—in this case, tokens from Chain A.
+Let’s say a user transfers tokens from Chain A to a Cosmos EVM chain via IBC-transfer and wants to execute an EVM transaction—however,
+ they don’t have any tokens to cover fees on the EVM chain. The Cosmos SDK introduced `Tips` as a solution to this issue;
+ a user can cover fees using a different token—in this case, tokens from Chain A.
 
 To cover transaction fees using a tip, this user can sign a transaction with a tip and no fees, then send the transaction
- to a fee relayer. The fee relayer will then cover the fee in the native currency (Evmos in this case), and receive the
+ to a fee relayer. The fee relayer will then cover the fee in the native currency, and receive the
   tip in payment, behaving as an intermediary exchange.
 
-## Dealing with gas and fees with the Evmos CLI
+## Dealing with gas and fees with the Cosmos EVM CLI
 
-When broadcasting a transaction using the Evmos CLI client, users should keep into consideration the options available.
+When broadcasting a transaction using the Cosmos EVM CLI client, users should keep into consideration the options available.
 There are three flags to consider when sending a transaction to the network:
 
-- `--fees`: fees to pay along with transaction; eg: 10aevmos. Defaults to the required fees.
+- `--fees`: fees to pay along with transaction. Defaults to the required fees.
 - `--gas`: the gas limit to set per-transaction; the default value is 200000.
-- `--gas-prices`: gas prices to determine the transaction fee (e.g. 10aevmos).
+- `--gas-prices`: gas prices to determine the transaction fee.
 
 However, not all of them need to be defined on each transaction.
 The correct combinations are:

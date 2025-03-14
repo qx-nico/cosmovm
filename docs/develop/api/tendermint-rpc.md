@@ -50,7 +50,7 @@ define the address with the `--rpc.laddr` flag when starting the node
 (default `tcp://127.0.0.1:26657`):
 
 ```bash
-evmosd start --rpc.laddr="tcp://127.0.0.1:26657"
+simd start --rpc.laddr="tcp://127.0.0.1:26657"
 ```
 
 Then, start a websocket subscription with [ws](https://github.com/hashrocket/ws)
@@ -64,8 +64,8 @@ ws ws://localhost:8080/websocket
 ```
 
 The `type` and `attribute` value of the `query` allow you to filter the specific `event` you are
-looking for. For example, an Ethereum transaction on Evmos (`MsgEthereumTx`) triggers an `event` of type `ethermint` and
-has `sender` and `recipient` as `attributes`. Subscribing to this `event` would be done like so:
+looking for. For example, an Ethereum transaction on a Cosmos EVM chain (`MsgEthereumTx`) triggers an `event` of type
+`ethermint` and has `sender` and `recipient` as `attributes`. Subscribing to this `event` would be done like so:
 
 ```json
 {
@@ -104,7 +104,7 @@ The main events you can subscribe to are:
 :::tip
 👉 The list of events types and values for each Cosmos SDK module
 can be found in the [Modules Specification](./../../../../protocol/modules/) section.
-Check the `Events` page to obtain the event list of each supported module on Evmos.
+Check the `Events` page to obtain the event list of each supported module in Cosmos EVM.
 :::
 
 List of all Tendermint event keys:

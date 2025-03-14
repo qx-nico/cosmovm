@@ -2,26 +2,11 @@
 sidebar_position: 6
 ---
 
-# Evmos Client Integrations
+# Cosmos EVM Client Integrations
 
 Client integration libraries play a crucial role in blockchain technology by making it easier for developers to interact
 with the blockchain network. Libraries abstract away complexities and provide integrations and methods to allow developers
 to create product in a more consistent manner.
-
-## Evmos-specific Client Integrations
-
-Evmos-specific libraries are useful in aiding developers speed up development by providing interfaces, types, and methods
-to signing, address converter (between `eth` and `evmos` addresses), and `EIP-712` transaction generator. There are two
-library bindings, in Javascript/Typescript and Python.
-
-- [EvmosJS](https://github.com/evmos/evmosjs) - is the official Evmos client Typescript library. This library contains
- several packages:
-    - [Address Converter](https://www.npmjs.com/package/@evmos/address-converter)
-    - [EIP-712](https://www.npmjs.com/package/@evmos/eip712)
-    - [Proto](https://www.npmjs.com/package/@evmos/proto)
-    - [Provider](https://www.npmjs.com/package/@evmos/provider)
-    - [Transactions](https://www.npmjs.com/package/@evmos/transactions)
-- [PyEvmos](https://github.com/sterliakov/pyevmos) - is a community-led Python library developed by [sterliakov](https://github.com/sterliakov)
 
 ## Ethereum Client Integrations
 

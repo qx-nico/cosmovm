@@ -6,7 +6,7 @@ sidebar_position: 2
 
 ## Available Extensions
 
-The following extensions are available in Evmos' implementation of the EVM:
+The following extensions are available in Cosmos EVM:
 
 | Address                                      | Name                | Stateful | EIP                                               | Testnet                  | Mainnet                  |
 | -------------------------------------------- | ------------------- | -------- | ------------------------------------------------- | ------------------------ | ------------------------ |

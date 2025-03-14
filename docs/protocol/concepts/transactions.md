@@ -43,20 +43,20 @@ Find a more detailed explanation on the section below.
 
 ## Transaction Types
 
-Evmos supports two transaction types:
+Cosmos EVM supports two transaction types:
 
 1. Cosmos transactions
 2. Ethereum transactions
 
-This is possible because Evmos uses the [Cosmos-SDK](https://docs.cosmos.network/main)
+This is possible because the Cosmos EVM uses the [Cosmos-SDK](https://docs.cosmos.network/main)
 and implements the [Ethereum Virtual Machine](https://ethereum.org/en/developers/docs/evm/) as a module.
-In this way, Evmos provides the features and functionalities of Ethereum and Cosmos chains combined, and more.
+In this way, Cosmos EVM provides the features and functionalities of Ethereum and Cosmos chains combined, and more.
 
 Although most of the information included on both of these transaction types is similar,
 there are differences among them.
 An important difference, is that Cosmos transactions allow multiple messages on the same transaction.
 Conversely, Ethereum transactions don't have this possibility.
-To bring these two types together, Evmos implements Ethereum transactions as a single [`sdk.Msg`](https://godoc.org/github.com/cosmos/cosmos-sdk/types#Msg)
+To bring these two types together, Cosmos EVM implements Ethereum transactions as a single [`sdk.Msg`](https://godoc.org/github.com/cosmos/cosmos-sdk/types#Msg)
 contained in an [`auth.StdTx`](https://pkg.go.dev/github.com/cosmos/cosmos-sdk/x/auth#StdTx).
 All relevant Ethereum transaction information is contained in this message.
 This includes the signature, gas, payload, etc.
@@ -114,7 +114,7 @@ An Ethereum transaction includes the following information:
 
 For more information on Ethereum transactions and the transaction lifecycle, [go here](https://ethereum.org/en/developers/docs/transactions/).
 
-Evmos supports the following Ethereum transactions.
+Cosmos EVM supports the following Ethereum transactions.
 
 :::tip
 **Note**: Unprotected legacy transactions are not supported by default.
@@ -124,9 +124,9 @@ Evmos supports the following Ethereum transactions.
 - Access List Transactions ([EIP-2930](https://eips.ethereum.org/EIPS/eip-2930))
 - Legacy Transactions ([EIP-2718](https://eips.ethereum.org/EIPS/eip-2718))
 
-Evmos is capable of processing Ethereum transactions by wrapping them on a `sdk.Msg`.
-Evmos achieves this by using the `MsgEthereumTx`.
-This message encapsulates an Ethereum transaction as an SDK message and contains the necessary transaction data fields.
+Cosmos EVM is capable of processing Ethereum transactions by wrapping them on a `sdk.Msg`. It achieves this by using the
+`MsgEthereumTx`. This message encapsulates an Ethereum transaction as an SDK message and contains the necessary
+transaction data fields.
 
 One remark about the `MsgEthereumTx` is that it implements both the `sdk.Msg` and `sdk.Tx` interfaces
 (generally SDK messages only implement the former, while the latter is a group of messages bundled together).
@@ -136,7 +136,7 @@ from Geth instead of the Cosmos SDK checks done on the auth module `AnteHandler`
 
 #### Ethereum Tx Type
 
-There are three types of transaction types used in Evmos's [Go Ethereum](https://github.com/ethereum/go-ethereum/blob/b946b7a13b749c99979e312c83dce34cac8dd7b1/core/types/transaction.go#L43-L48)
+There are three types of transaction types used in Cosmos EVM's [Go Ethereum](https://github.com/ethereum/go-ethereum/blob/b946b7a13b749c99979e312c83dce34cac8dd7b1/core/types/transaction.go#L43-L48)
 implementation that came from Ethereum Improvement Proposals(EIPs):
 
 1. LegacyTxType (EIP-155):

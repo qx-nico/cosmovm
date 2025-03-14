@@ -17,52 +17,52 @@ The following steps are required to migrate from a fork:
 
 The first step to move away from an existing forked codebase is adding the module import:
 
-- **Cosmos EVM**
+**Cosmos EVM**
+
+```bash
+go get github.com/evmos/evmos/vX
+#   adjust desired version --- ^
+```
     
-    ```bash
-    go get github.com/evmos/evmos/vX
-    #   adjust desired version --- ^
-    ```
+**Cosmos SDK**
     
-- **Cosmos SDK**
+Cosmos EVM is making use of its own fork of the Cosmos SDK codebase, specifically to add Ledger functionality with the Ethereum app.
+
+The following table shows the used versions of the Cosmos SDK fork with respect to the Cosmos EVM versions:
+
+| **Cosmos EVM Version** | **Cosmos SDK Fork** |
+| --- | --- |
+| v10.0.1 | v0.46.7-ledger |
+| v11.0.2 | v0.46.9-ledger |
+| v12.1.6 | v0.46.13-ledger.3 |
+| v13.0.2 | v0.46.13-alpha.ledger.8 |
+| v14.1.0 | v0.47.4-evmos.2 |
+| v15.0.0 | v0.47.5-evmos |
+| v16.0.4 | v0.47.5-evmos.2 |
+| v17.0.2 | v0.47.5-evmos.2 |
+| v18.1.0 | v0.47.5-evmos.2 |
+
+```bash
+go mod edit --replace \
+github.com/cosmos/cosmos-sdk=github.com/evmos/cosmos-sdk@vY
+#                       adjust version to desired one --- ^
+```
     
-    Cosmos EVM is making use of its own fork of the Cosmos SDK codebase, specifically to add Ledger functionality with the Ethereum app.
-    
-    The following table shows the used versions of the Cosmos SDK fork with respect to the Cosmos EVM versions:
-    
-    | **Cosmos EVM Version** | **Cosmos SDK Fork** |
-    | --- | --- |
-    | v10.0.1 | v0.46.7-ledger |
-    | v11.0.2 | v0.46.9-ledger |
-    | v12.1.6 | v0.46.13-ledger.3 |
-    | v13.0.2 | v0.46.13-alpha.ledger.8 |
-    | v14.1.0 | v0.47.4-evmos.2 |
-    | v15.0.0 | v0.47.5-evmos |
-    | v16.0.4 | v0.47.5-evmos.2 |
-    | v17.0.2 | v0.47.5-evmos.2 |
-    | v18.1.0 | v0.47.5-evmos.2 |
-    
-    ```bash
-    go mod edit --replace \
-    github.com/cosmos/cosmos-sdk=github.com/evmos/cosmos-sdk@vY
-    #                       adjust version to desired one --- ^
-    ```
-    
-- **Go-Ethereum**
-    
-    
-    Add a replace directive to the corresponding tag on the Cosmos Go-Ethereum fork.
-    
-    | **Cosmos EVM Version** | **evmOS Fork** |
-    | --- | --- |
-    | < v18.1.0 | v1.10.26-evmos |
-    
-    ```bash
-    go mod edit --replace \
-    github.com/ethereum/go-ethereum=github.com/evmos/go-ethereum@vZ
-    #                           adjust version to desired one --- ^
-    ```
-    
+**Go-Ethereum**
+
+
+Add a replace directive to the corresponding tag on the Cosmos Go-Ethereum fork.
+
+| **Cosmos EVM Version** | **evmOS Fork** |
+| --- | --- |
+| < v18.1.0 | v1.10.26-evmos |
+
+```bash
+go mod edit --replace \
+github.com/ethereum/go-ethereum=github.com/evmos/go-ethereum@vZ
+#                           adjust version to desired one --- ^
+```
+
 
 ## ♻️ Removing Forked Modules
 

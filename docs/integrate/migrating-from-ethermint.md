@@ -29,32 +29,33 @@ These are the steps to follow to migrate.
 
 The first step in migrating from Ethermint to Cosmos EVM is importing the corresponding version in the corresponding Go module file.
 
-- **Cosmos EVM**
+**Cosmos EVM**
     
-    ```yaml
+```
+yaml
     go get github.com/evmos/evmos/v13@v13.0.2
-    ```
-    
+```
+
 
 Furthermore, the necessary replacements to the used versions of the Cosmos EVM version have to be made.
 
-- **Cosmos SDK**
+**Cosmos SDK**
     
-    Add a replace directive to the corresponding release tag on the Cosmos EVM fork of the Cosmos-SDK.
+Add a replace directive to the corresponding release tag on the Cosmos EVM fork of the Cosmos-SDK.
+
+```bash
+go mod edit --replace \
+github.com/cosmos/cosmos-sdk=github.com/evmos/cosmos-sdk@v0.46.13-alpha.ledger.8
+```
     
-    ```bash
-    go mod edit --replace \
-    github.com/cosmos/cosmos-sdk=github.com/evmos/cosmos-sdk@v0.46.13-alpha.ledger.8
-    ```
+**Go-Ethereum**
     
-- **Go-Ethereum**
-    
-    Add a replace directive to the corresponding tag on Cosmos EVM' Go-Ethereum fork.
-    
-    ```bash
-    go mod edit --replace \
-    github.com/ethereum/go-ethereum=github.com/cosmos/go-ethereum@v1.10.26-evmos-rc2
-    ```
+Add a replace directive to the corresponding tag on Cosmos EVM' Go-Ethereum fork.
+
+```bash
+go mod edit --replace \
+github.com/ethereum/go-ethereum=github.com/cosmos/go-ethereum@v1.10.26-evmos-rc2
+```
     
 
 ### 💻 Adjusting The Import Paths

@@ -8,51 +8,24 @@ import ProjectValue from '@site/src/components/ProjectValue';
 import Highlighter from '@site/src/components/Highlighter';
 
 A chain ID is a unique identifier that represents a blockchain network. We use it to distinguish different blockchain
-networks from each other and to ensure that transactions and messages are sent to the correct network. Evmos network
-follows the format of `identifier_EIP155-version` format.
-
-## Official Chain IDs
-
-:::tip
-**NOTE**: The latest Chain ID (i.e highest Version Number) is the latest version of the software and mainnet. Also note, that the following upgrades technically did not require a Chain ID change:
-
-* `evmos_9001-1`	-> `evmos_9001-2`
-* `evmos_9000-3` -> `evmos_9000-4`
-:::
-
-### Mainnet
-
-| Name                                            | Chain ID                                      | Identifier | EIP-155 Number                         | Version Number                              | Active |
-| ----------------------------------------------- | --------------------------------------------- | ---------- | ------------------------------------- | ------------------------------------------- | -------|
-| Evmos <ProjectValue keyword="version_number" /> |  <Highlighter pretext="evmos_" keyword="chain_id" postText="-2" /> | `evmos`    | <Highlighter keyword="chain_id" /> |  <Highlighter keyword="version_number" /> | ✅ |
-| Evmos 1                                         | <Highlighter pretext="evmos_" keyword="chain_id" postText="-1" />  | `evmos`    | <Highlighter keyword="chain_id" /> | `1`                                         | 🚫 |
-
-### Testnet
-
-| Name                              | Chain ID                                              | Identifier | EIP-155 Number                                 | Version Number                                      | Active |
-| --------------------------------- | ----------------------------------------------------- | ---------- | --------------------------------------------- | --------------------------------------------------- | ------- |
-| Evmos Public Testnet              |  <Highlighter pretext="evmos_" keyword="testnet_chain_id" postText="-4" /> | `evmos`    |  <Highlighter keyword="testnet_chain_id" /> |  <Highlighter keyword="testnet_version_number" /> | ✅ |
-| Evmos Public Testnet              | <Highlighter pretext="evmos_" keyword="testnet_chain_id" postText="-3" /> | `evmos`    |  <Highlighter keyword="testnet_chain_id" /> | `3`                                                 | 🚫 |
-| Olympus Mons Incentivized Testnet | <Highlighter pretext="evmos_" keyword="testnet_chain_id" postText="-2" /> | `evmos`    |  <Highlighter keyword="testnet_chain_id" /> | `2`                                                 | 🚫 |
-| Arsia Mons Testnet                | <Highlighter pretext="evmos_" keyword="testnet_chain_id" postText="-1" /> | `evmos`    |  <Highlighter keyword="testnet_chain_id" /> | `1`                                                 | 🚫 |
+networks from each other and to ensure that transactions and messages are sent to the correct network. Your Cosmos EVM blockchain should
+follow the format of `identifier_EIP155-version` format.
 
 :::tip
 You can also look up the [EIP-155](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md) `Chain ID` by referring
 to [chainlist.org](https://chainlist.org/).
 :::
 
-![chainlist.org website](/img/chainlist.png)
-
 ## The Chain Identifier
 
 Every chain must have a unique identifier or `chain-id`. Tendermint requires each application to
 define its own `chain-id` in the [genesis.json fields](https://docs.tendermint.com/master/spec/core/genesis.html#genesis-fields).
- However, to comply with both EIP-155 and Cosmos standard for chain upgrades, Evmos-compatible chains must implement
+ However, to comply with both EIP-155 and Cosmos standard for chain upgrades, Cosmos EVM-compatible chains must implement
   a special structure for their chain identifiers.
 
 ## Structure
 
-The Evmos Chain ID contains 3 main components
+A Cosmos EVM Chain ID contains 3 main components
 
 - **Identifier**: Unstructured string that defines the name of the application.
 - **EIP-155 Number**: Immutable [EIP-155](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md) `CHAIN_ID` that
@@ -62,7 +35,7 @@ This number **MUST** be incremented every time the chain is upgraded or forked t
 
 ### Format
 
-The format for specifying and Evmos compatible chain-id in genesis is the following:
+The format for specifying a Cosmos EVM-compatible chain-id in genesis is the following:
 
 ```bash
 {identifier}_{EIP155}-{version}
@@ -72,7 +45,7 @@ The following table provides an example where the second row corresponds to an u
 
 | ChainID        | Identifier | EIP-155 Number | Version Number |
 | -------------- | ---------- | ------------- | -------------- |
-| `evmos_9000-1` | evmos      | 9000          | 1              |
-| `evmos_9000-2` | evmos      | 9000          | 2              |
-| `...`          | ...        | ...           | ...            |
-| `evmos_9000-N` | evmos      | 9000          | N              |
+| `cosmoshub-1`  | cosmoshub      | 9000          | 1              |
+| `cosmoshub-2`  | cosmoshub      | 9000          | 2              |
+| `...`          | ...            | ...           | ...            |
+| `cosmoshub-N`  | cosmoshub      | 9000          | N              |

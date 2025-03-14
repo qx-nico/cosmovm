@@ -17,7 +17,7 @@ for testing contracts before deploying them to the blockchain.
 The tool provides plugins as well.
 - [Truffle Suite](https://trufflesuite.com/docs/) contains a suite of comprehensive tools
 to streamline the process of building and testing smart contracts,
-and deploying them to any EVM network, like EVMOS network in Javascript/Typescript.
+and deploying them to any Cosmos EVM networks, in Javascript/Typescript.
 The suite contains [Truffle](https://trufflesuite.com/docs/truffle/)
 to make compiling, testing, debugging, and deploying smart contract development.
 [Ganache](https://trufflesuite.com/docs/ganache/) provides easy and fast local blockchain development environment

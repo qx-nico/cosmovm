@@ -53,12 +53,12 @@ const config = {
 
   customFields: {
     project: {
-      name: "Evmos",
-      denom: "Evmos",
-      ticker: "EVMOS",
-      binary: "evmosd",
-      testnet_denom: "tEvmos",
-      testnet_ticker: "tEVMOS",
+      name: "Cosmos EVM",
+      denom: "stake",
+      ticker: "STAKE",
+      binary: "simd",
+      testnet_denom: "tStake",
+      testnet_ticker: "tSTAKE",
       rpc_url: "https://evmos.lava.build",
       rpc_url_testnet: "https://evmos-testnet.lava.build",
       rpc_url_local: "http://localhost:8545/",
@@ -191,8 +191,8 @@ const config = {
                 to: '/develop/smart-contracts',
               },
               {
-                label: 'Contribute to Cosmos',
-                to: 'https://github.com/cosmos/',
+                label: 'Visit Cosmos',
+                to: 'https://cosmos.network/',
               },
        //       {
    //             label: 'Become a Validator',

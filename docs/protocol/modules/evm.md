@@ -30,7 +30,7 @@ which alleviate the aforementioned concerns through high transaction throughput
 via [Tendermint Core](https://github.com/tendermint/tendermint), fast transaction finality,
 and horizontal scalability via [IBC](https://ibcprotocol.org/).
 
-The `x/evm` module is part of the [ethermint library](https://pkg.go.dev/github.com/evmos/ethermint).
+The `x/evm` module is part of the [Cosmos EVM library](https://pkg.go.dev/github.com/cosmos/evm).
 
 ## Contents
 
@@ -55,7 +55,7 @@ evm/
 ├── client
 │   └── cli
 │       ├── query.go      # CLI query commands for the module
-│       └── tx.go         # CLI transaction commands for the module
+│       └── tx.go         # CLI transaction commands for the module
 ├── keeper
 │   ├── keeper.go         # ABCI BeginBlock and EndBlock logic
 │   ├── keeper.go         # Store keeper that handles the business logic of the module and has access to a specific subtree of the state tree.
@@ -63,20 +63,20 @@ evm/
 │   ├── querier.go        # State query functions
 │   └── statedb.go        # Functions from types/statedb with a passed in sdk.Context
 ├── types
-│   ├── chain_config.go
-│   ├── codec.go          # Type registration for encoding
-│   ├── errors.go         # Module-specific errors
-│   ├── events.go         # Events exposed to the Tendermint PubSub/Websocket
-│   ├── genesis.go        # Genesis state for the module
-│   ├── journal.go        # Ethereum Journal of state transitions
-│   ├── keys.go           # Store keys and utility functions
-│   ├── logs.go           # Types for persisting Ethereum tx logs on state after chain upgrades
-│   ├── msg.go            # EVM module transaction messages
-│   ├── params.go         # Module parameters that can be customized with governance parameter change proposals
-│   ├── state_object.go   # EVM state object
-│   ├── statedb.go        # Implementation of the StateDb interface
-│   ├── storage.go        # Implementation of the Ethereum state storage map using arrays to prevent non-determinism
-│   └── tx_data.go        # Ethereum transaction data types
+│   ├── chain_config.go
+│   ├── codec.go          # Type registration for encoding
+│   ├── errors.go         # Module-specific errors
+│   ├── events.go         # Events exposed to the Tendermint PubSub/Websocket
+│   ├── genesis.go        # Genesis state for the module
+│   ├── journal.go        # Ethereum Journal of state transitions
+│   ├── keys.go           # Store keys and utility functions
+│   ├── logs.go           # Types for persisting Ethereum tx logs on state after chain upgrades
+│   ├── msg.go            # EVM module transaction messages
+│   ├── params.go         # Module parameters that can be customized with governance parameter change proposals
+│   ├── state_object.go   # EVM state object
+│   ├── statedb.go        # Implementation of the StateDb interface
+│   ├── storage.go        # Implementation of the Ethereum state storage map using arrays to prevent non-determinism
+│   └── tx_data.go        # Ethereum transaction data types
 ├── genesis.go            # ABCI InitGenesis and ExportGenesis functionality
 ├── handler.go            # Message routing
 └── module.go             # Module setup for the module manager
@@ -101,7 +101,7 @@ To make a clear distinction:
 
 * The Ethereum protocol describes a blockchain,
   in which all Ethereum accounts and smart contracts live.
-  It has only one canonical state (a data structure, which keeps all accounts)
+  It has only one canonical state (a data structure, which keeps all accounts)
   at any given block in the chain.
 * The EVM, however, is the [state machine](https://en.wikipedia.org/wiki/Finite-state_machine)
   that defines the rules for computing a new valid state from block to block.
@@ -187,16 +187,16 @@ For further reading, please refer to:
 * [What is Ethereum](https://ethdocs.org/en/latest/introduction/what-is-ethereum.html#what-is-ethereum)
 * [Opcodes](https://www.ethervm.io/)
 
-### Evmos as Geth implementation
+### Cosmos EVM as Geth implementation
 
-Evmos contains an implementation of the [Ethereum protocol in Golang](https://geth.ethereum.org/docs/getting-started)
+Cosmos EVM contains an implementation of the [Ethereum protocol in Golang](https://geth.ethereum.org/docs/getting-started)
 (Geth) as a Cosmos SDK module.
 Geth includes an implementation of the EVM to compute state transitions.
 Have a look at the [go-ethereum source code](https://github.com/ethereum/go-ethereum/blob/master/core/vm/instructions.go)
 to see how the EVM opcodes are implemented.
 Just as Geth can be run as an Ethereum node,
-Evmos can be run as a node to compute state transitions with the EVM.
-Evmos supports Geth's standard [Ethereum JSON-RPC APIs](https://docs.evmos.org/develop/api/ethereum-json-rpc/methods)
+A Cosmos EVM chain can be run as a node to compute state transitions with the EVM.
+Cosmos EVM supports Geth's standard [Ethereum JSON-RPC APIs](https://docs.cosmos.network/develop/api/ethereum-json-rpc/methods)
 in order to be Web3 and EVM compatible.
 
 #### JSON-RPC
@@ -210,7 +210,7 @@ It uses JSON (RFC 4627) as a data format.
 
 ##### JSON-RPC Example: `eth_call`
 
-The JSON-RPC method [`eth_call`](https://docs.evmos.org/develop/api/ethereum-json-rpc/methods#eth-call) allows you
+The JSON-RPC method [`eth_call`](https://docs.cosmos.network/develop/api/ethereum-json-rpc/methods#eth-call) allows you
 to execute messages against contracts.
 Usually, you need to send a transaction to a Geth node to include it in the mempool,
 then nodes gossip between each other and eventually the transaction is included in a block and gets executed.
@@ -235,15 +235,15 @@ In the Geth implementation, calling the endpoint roughly goes through the follow
 7. [`Run()`](https://github.com/ethereum/go-ethereum/blob/d575a2d3bc76dfbdefdd68b6cffff115542faf75/core/vm/interpreter.go#L116)
    performs a loop to execute the opcodes.
 
-The Evmos implementation is similar and makes use of the gRPC query client which is included in the Cosmos SDK:
+The Cosmos EVM implementation is similar and makes use of the gRPC query client which is included in the Cosmos SDK:
 
 1. `eth_call` request is transformed to call the `func (e *PublicAPI) Call` function using the `eth` namespace
-2. [`Call()`](https://github.com/evmos/ethermint/blob/main/rpc/namespaces/ethereum/eth/api.go#L639) calls `doCall()`
-3. [`doCall()`](https://github.com/evmos/ethermint/blob/main/rpc/namespaces/ethereum/eth/api.go#L656)
+2. [`Call()`](https://github.com/cosmos/evm/blob/main/rpc/namespaces/ethereum/eth/api.go) calls `doCall()`
+3. [`doCall()`](https://github.com/cosmos/evm/blob/main/rpc/namespaces/ethereum/eth/api.go)
    transforms the arguments into a `EthCallRequest` and calls `EthCall()` using the query client of the evm module.
-4. [`EthCall()`](https://github.com/evmos/ethermint/blob/main/x/evm/keeper/grpc_query.go#L212)
+4. [`EthCall()`](https://github.com/cosmos/evm/blob/main/x/evm/keeper/grpc_query.go)
    transforms the arguments into a `ethtypes.message` and calls `ApplyMessageWithConfig()
-5. [`ApplyMessageWithConfig()`](https://github.com/evmos/ethermint/blob/d5598932a7f06158b7a5e3aa031bbc94eaaae32c/x/evm/keeper/state_transition.go#L341)
+5. [`ApplyMessageWithConfig()`](https://github.com/cosmos/evm/blob/d5598932a7f06158b7a5e3aa031bbc94eaaae32c/x/evm/keeper/state_transition.go)
    instantiates an EVM and either `Create()`s a new contract or `Call()`s a contract using the Geth implementation.
 
 #### StateDB
@@ -251,7 +251,7 @@ The Evmos implementation is similar and makes use of the gRPC query client which
 The `StateDB` interface from [go-ethereum](https://github.com/ethereum/go-ethereum/blob/master/core/vm/interface.go)
 represents an EVM database for full state querying.
 EVM state transitions are enabled by this interface, which in the `x/evm` module is implemented by the `Keeper`.
-The implementation of this interface is what makes Evmos EVM compatible.
+The implementation of this interface is what makes the Cosmos EVM compatible.
 
 ### Consensus Engine
 
@@ -479,7 +479,7 @@ and revert the state to a given revision with `RevertToSnapshot()` to support th
 - `Snapshot()` creates a new snapshot and returns the identifier.
 - `RevertToSnapshot(rev)` undo all the modifications up to the snapshot identified as `rev`.
 
-Evmos adapted the [go-ethereum journal implementation](https://github.com/ethereum/go-ethereum/blob/master/core/state/journal.go#L39)
+Cosmos EVM adapted the [go-ethereum journal implementation](https://github.com/ethereum/go-ethereum/blob/master/core/state/journal.go#L39)
 to support this, it uses a list of journal logs to record all the state modification operations done so far,
 snapshot is consists of a unique id and an index in the log list,
 and to revert to a snapshot it just undoes the journal logs after the snapshot index in reversed order.
@@ -497,7 +497,7 @@ and implements `statedb.Keeper` interface to support the `StateDB` implementatio
 The Keeper contains a store key that allows the DB
 to write to a concrete subtree of the multistore that is only accessible by the EVM module.
 Instead of using a trie and database for querying and persistence (the `StateDB` implementation),
-Evmos uses the Cosmos `KVStore` (key-value store) and Cosmos SDK `Keeper` to facilitate state transitions.
+Cosmos EVM uses the Cosmos `KVStore` (key-value store) and Cosmos SDK `Keeper` to facilitate state transitions.
 
 To support the interface functionality, it imports 4 module Keepers:
 
@@ -565,14 +565,14 @@ type GenesisState struct {
 The `GenesisAccount` type corresponds to an adaptation of the Ethereum `GenesisAccount` type.
 It defines an account to be initialized in the genesis state.
 
-Its main difference is that the one on Evmos uses a custom `Storage` type
+Its main difference is that the one on the Cosmos EVM uses a custom `Storage` type
 that uses a slice instead of maps for the evm `State` (due to non-determinism),
 and that it doesn't contain the private key field.
 
 It is also important to note that since the `auth` module on the Cosmos SDK manages the account state,
 the `Address` field must correspond to an existing `EthAccount`
 that is stored in the `auth`'s module `Keeper` (i.e `AccountKeeper`).
-Addresses use the **[EIP55](https://eips.ethereum.org/EIPS/eip-55)** hex **[format](https://docs.evmos.org/protocol/concepts/accounts#address-formats-for-clients)**
+Addresses use the **[EIP55](https://eips.ethereum.org/EIPS/eip-55)** hex **[format](https://docs.cosmos.network/protocol/concepts/accounts#address-formats-for-clients)**
 on `genesis.json`.
 
 ```go
@@ -630,7 +630,7 @@ Once a block (containing the `Tx`) has been committed during consensus,
 it is applied to the application in a series of ABCI msgs server-side.
 
 Each `Tx` is handled by the application by calling [`RunTx`](https://docs.cosmos.network/main/learn/advanced/baseapp).
-After a stateless validation on each `sdk.Msg` in the `Tx`,
+After a stateless validation on each `sdk.Msg` in the `Tx`,
 the `AnteHandler` confirms whether the `Tx` is an Ethereum or SDK transaction.
 As an Ethereum transaction it's containing msgs are then handled
 by the `x/evm` module to update the application's state.
@@ -678,7 +678,7 @@ The `antehandler` runs through a series of options and their `AnteHandle` functi
 
 The options `authante.NewMempoolFeeDecorator()`, `authante.NewTxTimeoutHeightDecorator()`
 and `authante.NewValidateMemoDecorator(ak)` are the same as for a Cosmos `Tx`.
-Click [here](https://docs.cosmos.network/main/learn/beginner/gas-fees.html#antehandler) for more on the `anteHandler`.
+Click [here](https://docs.cosmos.network/main/learn/beginner/gas-fees.html#antehandler) for more on the `anteHandler`.
 
 #### EVM module
 
@@ -709,7 +709,7 @@ and runs through the following the steps:
 
 ## Transactions
 
-This section defines the `sdk.Msg` concrete types that result in the state transitions defined on the previous section.
+This section defines the `sdk.Msg` concrete types that result in the state transitions defined on the previous section.
 
 ## `MsgEthereumTx`
 
@@ -962,10 +962,10 @@ This message field validation is expected to fail if:
 The Application Blockchain Interface (ABCI) allows the application to interact with the Tendermint Consensus engine.
 The application maintains several ABCI connections with Tendermint.
 The most relevant for the  `x/evm` is the [Consensus connection at Commit](https://docs.tendermint.com/v0.33/app-dev/app-development.html#consensus-connection).
-This connection is responsible for block execution and calls the functions `InitChain`
-(containing `InitGenesis`), `BeginBlock`, `DeliverTx`, `EndBlock`, `Commit` .
-`InitChain` is only called the first time a new blockchain is started
-and `DeliverTx` is called for each transaction in the block.
+This connection is responsible for block execution and calls the functions `InitChain`
+(containing `InitGenesis`), `BeginBlock`, `DeliverTx`, `EndBlock`, `Commit` .
+`InitChain` is only called the first time a new blockchain is started
+and `DeliverTx` is called for each transaction in the block.
 
 ### InitGenesis
 
@@ -1042,9 +1042,9 @@ The error returned by the hooks is translated to a VM error `failed to process n
 the detailed error message is stored in the return value.
 The message is sent to native modules asynchronously, there's no way for the caller to catch and recover the error.
 
-### Use Case: Call Native ERC20 Module on Evmos
+### Use Case: Call Native ERC20 Module in the Cosmos EVM
 
-Here is an example taken from the Evmos [erc20 module](erc20.md)
+Here is an example taken from the Cosmos EVM [erc20 module](erc20.md)
 that shows how the `EVMHooks` supports a contract calling a native module
 to convert ERC-20 Tokens into Cosmos native Coins.
 Following the steps from above.
@@ -1238,7 +1238,7 @@ The evm module contains the following parameters:
 
 | Key            | Type        | Default Value   |
 |----------------|-------------|-----------------|
-| `EVMDenom`     | string      | `"aevmos"`      |
+| `EVMDenom`     | string      | `"astake"`      |
 | ~~`EnableCreate`~~ | bool        | `true`          |
 | ~~`EnableCall`~~   | bool        | `true`          |
 | `ExtraEIPs`    | []int       | TBD             |
@@ -1253,13 +1253,13 @@ The evm denomination parameter defines the token denomination
 used on the EVM state transitions and gas consumption for EVM messages.
 
 For example, on Ethereum, the `evm_denom` would be `ETH`.
-In the case of Evmos, the default denomination is the **atto evmos**.
-In terms of precision, `EVMOS` and `ETH` share the same value,
-*i.e.* `1 EVMOS = 10^18 atto evmos` and `1 ETH = 10^18 wei`.
+In the case of Cosmos EVM, the default denomination is the **atto stake**.
+In terms of precision, `STAKE` and `ETH` share the same value,
+*i.e.* `1 STAKE = 10^18 atto stake` and `1 ETH = 10^18 wei`.
 
 :::tip
 Note: SDK applications that want to import the EVM module as a dependency
-will need to set their own `evm_denom` (i.e not `"aevmos"`).
+will need to set their own `evm_denom` (i.e not `"astake"`).
 :::
 
 ### Enable Create
@@ -1360,28 +1360,28 @@ deploying contracts or calling the EVM respectively.
 
 ## Client
 
-A user can query and interact with the `evm` module using the CLI, JSON-RPC, gRPC or REST.
+A user can query and interact with the `evm` module using the CLI, JSON-RPC, gRPC or REST.
 
 ### CLI
 
-Find below a list of `evmosd` commands added with the `x/evm` module.
-You can obtain the full list by using the `evmosd -h` command.
+Find below a list of `simd` commands added with the `x/evm` module.
+You can obtain the full list by using the `simd -h` command.
 
 #### Queries
 
-The `query` commands allow users to query `evm` state.
+The `query` commands allow users to query `evm` state.
 
 **`code`**
 
 Allows users to query the smart contract code at a given address.
 
 ```bash
-evmosd query evm code ADDRESS [flags]
+simd query evm code ADDRESS [flags]
 ```
 
 ```bash
 # Example
-$ evmosd query evm code 0x7bf7b17da59880d9bcca24915679668db75f9397
+$ simd query evm code 0x7bf7b17da59880d9bcca24915679668db75f9397
 
 # Output
 code: "0xef616c92f3cfc9e92dc270d6acff9cea213cecc7020a76ee4395af09bdceb4837a1ebdb5735e11e7d3adb6104e0c3ac55180b4ddf5e54d022cc5e8837f6a4f971b"
@@ -1392,12 +1392,12 @@ code: "0xef616c92f3cfc9e92dc270d6acff9cea213cecc7020a76ee4395af09bdceb4837a1ebdb
 Allows users to query storage for an account with a given key and height.
 
 ```bash
-evmosd query evm storage ADDRESS KEY [flags]
+simd query evm storage ADDRESS KEY [flags]
 ```
 
 ```bash
 # Example
-$ evmosd query evm storage 0x0f54f47bf9b8e317b214ccd6a7c3e38b893cd7f0 0 --height 0
+$ simd query evm storage 0x0f54f47bf9b8e317b214ccd6a7c3e38b893cd7f0 0 --height 0
 
 # Output
 value: "0x0000000000000000000000000000000000000000000000000000000000000000"
@@ -1405,19 +1405,19 @@ value: "0x0000000000000000000000000000000000000000000000000000000000000000"
 
 #### Transactions
 
-The `tx` commands allow users to interact with the `evm` module.
+The `tx` commands allow users to interact with the `evm` module.
 
 **`raw`**
 
 Allows users to build cosmos transactions from raw ethereum transaction.
 
 ```bash
-evmosd tx evm raw TX_HEX [flags]
+simd tx evm raw TX_HEX [flags]
 ```
 
 ```bash
 # Example
-$ evmosd tx evm raw 0xf9ff74c86aefeb5f6019d77280bbb44fb695b4d45cfe97e6eed7acd62905f4a85034d5c68ed25a2e7a8eeb9baf1b84
+$ simd tx evm raw 0xf9ff74c86aefeb5f6019d77280bbb44fb695b4d45cfe97e6eed7acd62905f4a85034d5c68ed25a2e7a8eeb9baf1b84
 
 # Output
 value: "0x0000000000000000000000000000000000000000000000000000000000000000"
@@ -1425,8 +1425,8 @@ value: "0x0000000000000000000000000000000000000000000000000000000000000000"
 
 ### JSON-RPC
 
-For an overview on the JSON-RPC methods and namespaces supported on Evmos,
-please refer to [https://docs.evmos.org/develop/api/ethereum-json-rpc/methodsl](https://docs.evmos.org/develop/api/ethereum-json-rpc/methods)
+For an overview on the JSON-RPC methods and namespaces supported on Cosmos EVM,
+please refer to [https://docs.cosmos.network/develop/api/ethereum-json-rpc/methodsl](https://docs.cosmos.network/develop/api/ethereum-json-rpc/methods)
 
 ### gRPC
 
