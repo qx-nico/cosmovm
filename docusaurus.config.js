@@ -165,11 +165,6 @@ const config = {
           },
           {
             position: 'right',
-            label: 'Networks',
-            to: '/develop/api/networks',
-          },
-          {
-            position: 'right',
             label: 'Cosmos',
             to: 'https://cosmos.network/',
           },
