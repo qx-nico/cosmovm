@@ -4,6 +4,10 @@ sidebar_position: 5
 
 # Enable Cosmos EVM Precompiles
 
+:::note
+These documents are in maintenance, due to the recent migration from evmOS to the maintenance of this fork by the Interchain Labs team. The team is working on updating stale or old references, and re-link to the appropriate repositories. **If you'd like to get in touch with a Cosmos EVM expert at Interchain Labs, please reach out [here](https://share-eu1.hsforms.com/2g6yO-PVaRoKj50rUgG4Pjg2e2sca)**.
+:::
+
 Cosmos EVM precompiles are an innovative solution to align the Cosmos and EVM worlds provided by Cosmos EVM. This system is a combination of precompiles smart contracts, Cosmos-native module logic and corresponding Solidity interfaces, which enable accessing a chain’s core Cosmos primitives through MetaMask or other EVM wallets and smart contracts on the EVM.
 
 Cosmos EVM provides precompiles for a selection of core modules from the Cosmos SDK (staking, distribution, bank) and modules from Cosmos EVM itself (ERC-20). These can be enabled to for use by passing a corresponding map of contract addresses and the respective precompiled contracts into the EVM keeper during the application instantiation.

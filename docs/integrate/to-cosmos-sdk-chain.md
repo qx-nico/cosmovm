@@ -6,6 +6,10 @@ sidebar_position: 1
 
 This guide will help you integrate onto a Cosmos SDK - based chain.
 
+:::note
+These documents are in maintenance, due to the recent migration from evmOS to the maintenance of this fork by the Interchain Labs team. The team is working on updating stale or old references, and re-link to the appropriate repositories. **If you'd like to get in touch with a Cosmos EVM expert at Interchain Labs, please reach out [here](https://share-eu1.hsforms.com/2g6yO-PVaRoKj50rUgG4Pjg2e2sca)**.
+:::
+
 
 ## ☑️ Prerequisites
 

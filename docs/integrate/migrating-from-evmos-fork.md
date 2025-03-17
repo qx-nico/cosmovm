@@ -4,6 +4,10 @@ sidebar_position: 3
 
 # Migrate from evmOS Fork
 
+:::note
+These documents are in maintenance, due to the recent migration from evmOS to the maintenance of this fork by the Interchain Labs team. The team is working on updating stale or old references, and re-link to the appropriate repositories. **If you'd like to get in touch with a Cosmos EVM expert at Interchain Labs, please reach out [here](https://share-eu1.hsforms.com/2g6yO-PVaRoKj50rUgG4Pjg2e2sca)**.
+:::
+
 If you have started your project as a fork of the evmOS repository, we have good news for you! Upgrading to Cosmos EVM will enable you to reduce a lot of code in your codebase and replace its native types and functions with the corresponding imports from the original codebase.
 
 In addition you will be profit from security upgrades, performance improvements and feature additions without having the development overhead of manually adjusting your fork.
