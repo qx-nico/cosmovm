@@ -2,28 +2,37 @@
 sidebar_position: 11
 ---
 
-# Tokens
+# Signing
 
-It is recommend to uses [Atto](https://en.wikipedia.org/wiki/Atto-) for your base denomination to maintain parity with Ethereum.
-There are two types of assets to consider on a Cosmos EVM-based chain:
+Signing is the process of creating a digital signature using a private key to verify a transaction
+on a blockchain. The signature is created using a specific cryptographic algorithm that
+ensures the authenticity and integrity of the transaction using methods like
+wallets and the CLI.
 
-- Cosmos tokens issued by the `x/bank` module
-- Ethereum-typed tokens, e.g. ERC-20, issued by the EVM
+There are different methods for signing, but one of the most commonly used methods is the
+[EIP-712](https://eips.ethereum.org/EIPS/eip-712) standard.
+Cosmos EVM leverages EIP-712 to homogenize the interaction between the EVM and Cosmos.
 
-`1 stake = 10<sup>18</sup> astake`
+## EIP-712
 
-This matches Ethereum denomination of:
+EIP-712 introduces a standard for signing "typed-data" in a human-readable format. This standard allowed users to understand
+the data they are signing more easily and provides a more secure way to sign data, as it is less susceptible to phishing
+attacks. EIP-712 is not an Ethereum transaction type, but a method for signing structured data that can be used for
+authentication and indirect influence on program logic.
 
-`1 ETH = 10<sup>18</sup> wei`
+To support signing Cosmos transactions, Cosmos EVM utilizes the EIP-712 protocol for encoding Cosmos transactions in a
+format that can be understood and processed by Ethereum signers, including Ledger hardware wallets. This approach
+helps to overcome the limitations of Ethereum signing devices, which often do not support signing arbitrary bytes
+for security reasons.
 
-## Cosmos Coins
+The process works as follows:
 
-Accounts can own Cosmos coins in their balance, which are used for operations with other Cosmos and transactions. Examples
-of these are using the coins for staking, IBC transfers, governance deposits and EVM.
+1. A Cosmos transaction is represented as a JSON sign-doc.
+2. The JSON sign-doc is converted to an EIP-712 object, which consists of types and messages.
+3. The EIP-712 object is signed using an Ethereum signer, such as MetaMask or a Ledger hardware device.
+4. The same process is performed on the node to verify the signature.
 
-## EVM Tokens
-
-Cosmos EVM is compatible with ERC20 tokens and other non-fungible token standards (EIP721, EIP1155)
-that are natively supported by the EVM.
-
-For more information on how we handle token registration, head over [here](./../../develop/mainnet#token-registration).
+By using EIP-712 for signing Cosmos transactions, Cosmos EVM ensures compatibility with popular Ethereum signing tools
+like MetaMask and Ledger devices as well as Cosmos specific ones like Keplr and Leap. This compatibility makes it easier
+for users to interact with both Ethereum and Cosmos networks, ultimately fostering greater interoperability between the
+two ecosystems.

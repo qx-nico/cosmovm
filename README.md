@@ -1,7 +1,9 @@
-# Evmos Docs
+# Cosmos EVM Docs
 
 Welcome to the official Cosmos EVM Developer Docs. The official deployment is located [here](https://evm.cosmos.network).
 The official codebase is located [here](https://github.com/cosmos/evm).
+
+These documents are in maintenance, due to the recent migration from evmOS to the maintenance of this fork by the Interchain Labs team. The team is working on updating stale or old references, and re-link to the appropriate repositories.
 
 [License](./LICENSE) is GNU Lesser General Public License v3.0.
 

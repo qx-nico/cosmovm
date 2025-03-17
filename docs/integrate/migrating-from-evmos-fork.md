@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-# Migrate from Evmos Fork
+# Migrate from evmOS Fork
 
-If you have started your project as a fork of the Evmos repository, we have good news for you! Upgrading to Cosmos EVM will enable you to reduce a lot of code in your codebase and replace its native types and functions with the corresponding imports from the original codebase.
+If you have started your project as a fork of the evmOS repository, we have good news for you! Upgrading to Cosmos EVM will enable you to reduce a lot of code in your codebase and replace its native types and functions with the corresponding imports from the original codebase.
 
 In addition you will be profit from security upgrades, performance improvements and feature additions without having the development overhead of manually adjusting your fork.
 
@@ -20,7 +20,7 @@ The first step to move away from an existing forked codebase is adding the modul
 **Cosmos EVM**
 
 ```bash
-go get github.com/evmos/evmos/vX
+go get github.com/cosmos/evm/vX
 #   adjust desired version --- ^
 ```
     
@@ -69,14 +69,14 @@ github.com/ethereum/go-ethereum=github.com/evmos/go-ethereum@vZ
 As the project now has obtained a license to use the most recent version of the Cosmos EVM, we recommended to remove all corresponding modules from the fork, that did not undergo any adjustments by the project team. These can be directly imported from the Cosmos EVM dependency and thus will contain the most up-to-date changes.
 This removes legacy code from the project’s codebase and makes the project cleaner.
 
-As a fork of the legacy Evmos codebase, the most types and functions should already be in use within the codebase that is distinct to the given project. Hence, this process of moving to an Cosmos EVM user is simply a matter of adjusting import paths.
+As a fork of the legacy evmOS codebase, the most types and functions should already be in use within the codebase that is distinct to the given project. Hence, this process of moving to an Cosmos EVM user is simply a matter of adjusting import paths.
 
 For example, if the `encoding` package has been removed from the codebase, the following shell command replaces those import paths with the corresponding import from the Cosmos EVM:
 
 ```bash
 grep -rl 'github.com/YOUR-ORG/YOUR-PROJECT/encoding' ./ \
 | LC_ALL=C xargs sed -i '' \
-'s|github.com/YOUR-ORG/YOUR-PROJECT/encoding|github.com/evmos/evmos/vX/encoding|g'
+'s|github.com/YOUR-ORG/YOUR-PROJECT/encoding|github.com/cosmos/evm/vX/encoding|g'
 #             adjust to desired version ---------------------------- ^
 ```
 
@@ -95,6 +95,6 @@ This will make the upgrade process leaner and also provide a separation of conce
 
 After migrating to Cosmos EVM you can extend the functionality of your chain even further than making use of the most recent up-to-date EVM implementation.
 
-- Unify ERC-20s and Cosmos Coins with the *Single Token Representation v2*.
-- Enable EVM Extensions or add your own custom implementations, that let smart contract developers and EVM users access your Cosmos SDK module functionality! More information can be found here: https://evm.cosmos.network/develop/smart-contracts/evm-extensions.
-- Add more functionality from the https://evm.cosmos.network/protocol/modules.
+- Unify ERC-20s and Cosmos Coins with the *[Single Token Representation v2](./unify-erc-20s-and-cosmos-coins/)*.
+- Enable precompiles or add your own custom implementations, that let smart contract developers and EVM users access your Cosmos SDK module functionality! More information can be found [here](../develop/smart-contracts/cosmos-sdk-precompiles/)
+- Add more functionality from the [Cosmos EVM Modules](../protocol/modules/).

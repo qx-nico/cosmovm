@@ -124,15 +124,15 @@ The EVM can be added to your application, by adding the necessary logic to add t
 Both modules have to be wired up as any other Cosmos SDK module, which means adding it to the following pieces of core architecture:
 
 - List of entities to add to in app wiring
-    - [Basic Manager](https://github.com/evmos/evmos/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L239-L240)
-    - [Module Manager](https://github.com/evmos/evmos/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L648-L649)
-    - [Begin Blockers Order](https://github.com/evmos/evmos/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L672-L673)
-    - [End Blockers Order](https://github.com/evmos/evmos/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L700-L701)
-    - [Init Genesis Order](https://github.com/evmos/evmos/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L743-L747)
-    - [Account Permissions](https://github.com/evmos/evmos/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L258)
-    - [Store Keys](https://github.com/evmos/evmos/blob/main/app/keys.go#L52)
-    - [Transient Keys](https://github.com/evmos/evmos/blob/main/app/keys.go#L61)
-    - [Parameter Subspaces](https://github.com/evmos/evmos/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L1143-L1144)
+    - [Basic Manager](https://github.com/cosmos/evm/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L239-L240)
+    - [Module Manager](https://github.com/cosmos/evm/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L648-L649)
+    - [Begin Blockers Order](https://github.com/cosmos/evm/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L672-L673)
+    - [End Blockers Order](https://github.com/cosmos/evm/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L700-L701)
+    - [Init Genesis Order](https://github.com/cosmos/evm/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L743-L747)
+    - [Account Permissions](https://github.com/cosmos/evm/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L258)
+    - [Store Keys](https://github.com/cosmos/evm/blob/main/app/keys.go#L52)
+    - [Transient Keys](https://github.com/cosmos/evm/blob/main/app/keys.go#L61)
+    - [Parameter Subspaces](https://github.com/cosmos/evm/blob/13f5d57a967abb3ffdc314ca150a615b31f5ffe7/app/app.go#L1143-L1144)
 
 **Keeper Instantiation**
 
@@ -141,8 +141,8 @@ The module keeper fields will have to be added to the main application struct to
 ```go
 import (
 	// ...
-	evmkeeper "github.com/evmos/evmos/v19/x/evm/keeper"
-	feemarketkeeper "github.com/evmos/evmos/v19/x/feemarket/keeper"
+	evmkeeper "github.com/cosmos/evm/v19/x/evm/keeper"
+	feemarketkeeper "github.com/cosmos/evm/v19/x/feemarket/keeper"
 )
 
 type ExampleApp struct {
@@ -156,7 +156,7 @@ type ExampleApp struct {
 
 Instantiation of the keepers is straightforward for the feemarket module but requires additional setup for the EVM module, as the map of available precompiled smart contracts is defined at the application instantiation level.
 
-Precompiled smart contracts have originally been designed to enable running computation-heavy operations on-chain without the need to have it run by the Solidity interpreter. We have adjusted this implementation to enable our [EVM Extensions](https://evm.cosmos.network/develop/smart-contracts/evm-extensions), which make it possible for smart contracts to interact with Cosmos-native functionality of a chain.
+Precompiled smart contracts have originally been designed to enable running computation-heavy operations on-chain without the need to have it run by the Solidity interpreter. We have adjusted this implementation to enable our [Cosmos EVM precompiles](https://evm.cosmos.network/develop/smart-contracts/precompiles), which make it possible for smart contracts to interact with Cosmos-native functionality of a chain.
 
 In case, that only the default Ethereum behavior is desired, the instantiation can point to Ethereum’s map of precompiles.
 
@@ -164,11 +164,11 @@ In case, that only the default Ethereum behavior is desired, the instantiation c
 	// app/app.go
 	import (
 		// ...
-		"github.com/evmos/evmos/v19/x/evm/core/vm"
-		evmkeeper "github.com/evmos/evmos/v19/x/evm/keeper"
-		evmtypes "github.com/evmos/evmos/v19/x/evm/types"
-		feemarketkeeper "github.com/evmos/evmos/v19/x/feemarket/keeper"
-		feemarkettypes "github.com/evmos/evmos/v19/x/feemarket/types"
+		"github.com/cosmos/evm/v19/x/evm/core/vm"
+		evmkeeper "github.com/cosmos/evm/v19/x/evm/keeper"
+		evmtypes "github.com/cosmos/evm/v19/x/evm/types"
+		feemarketkeeper "github.com/cosmos/evm/v19/x/feemarket/keeper"
+		feemarkettypes "github.com/cosmos/evm/v19/x/feemarket/types"
 		srvflags "github.com/cosmos/evm/server/flags"
 	)
 	
@@ -197,9 +197,9 @@ In case, that only the default Ethereum behavior is desired, the instantiation c
 	)
 ```
 
-It is also suggested to include the address of the available EVM extensions, no matter if they are *active* or not, in the list of blocked addresses when instantiating the bank keeper.
+It is also suggested to include the address of the available precompiles, no matter if they are *active* or not, in the list of blocked addresses when instantiating the bank keeper.
 
-The reference implementation for a method that returns the map of blocked addresses can be found here: https://github.com/evmos/evmos/blob/b36241652b57347ed5d83c5f6925e2b371996aec/app/app.go#L929-L959.
+The reference implementation for a method that returns the map of blocked addresses can be found [here](https://github.com/cosmos/evm/blob/b36241652b57347ed5d83c5f6925e2b371996aec/app/app.go#L929-L959).
 
 ```go
 // BlockedAddrs returns all the addresses that are not
@@ -245,7 +245,7 @@ Cosmos EVM enables developers to build chains that handle Ethereum style transac
 
 This is required to account for the different approaches to e.g. handling gas payments for the corresponding transactions or the different signature verifications.
 
-Specifically, our implementation relies on the corresponding signature verification handlers ([EVM](https://github.com/evmos/evmos/blob/main/app/ante/evm/05_signature_verification.go#L58), [Cosmos](https://github.com/evmos/evmos/blob/main/app/ante/sigverify.go#L37) & [EIP-712 Cosmos Messages](https://github.com/evmos/evmos/blob/main/app/ante/cosmos/eip712.go#L61)) and the custom logic to [deduct fees](https://github.com/evmos/evmos/blob/main/app/ante/evm/fee_checker.go#L20-L41), which is dependent on our implementation of the EIP-1559 and will have to be implemented on the customer chains.
+Specifically, our implementation relies on the corresponding signature verification handlers ([EVM](https://github.com/cosmos/evm/blob/main/app/ante/evm/05_signature_verification.go#L58), [Cosmos](https://github.com/cosmos/evm/blob/main/app/ante/sigverify.go#L37) & [EIP-712 Cosmos Messages](https://github.com/cosmos/evm/blob/main/app/ante/cosmos/eip712.go#L61)) and the custom logic to [deduct fees](https://github.com/cosmos/evm/blob/main/app/ante/evm/fee_checker.go#L20-L41), which is dependent on our implementation of the EIP-1559 and will have to be implemented on the customer chains.
 
 ## 🔹EVM Ante Handler
 
@@ -255,18 +255,18 @@ This implementation helps reduce the overhead of repeated queries and type conve
 
 ### Cosmos Ante Handler
 
-The standard Cosmos SDK messages are handled with common ante decorators used by many chains. We do extend the standard ante handling flow by rejecting any transactions that contain `MsgEthereumTx` in them ([here](https://github.com/evmos/evmos/blob/main/app/ante/cosmos.go#L19)) and also limit operations that can be delegated to other accounts ([here](https://github.com/evmos/evmos/blob/main/app/ante/cosmos.go#L20-L23)).
+The standard Cosmos SDK messages are handled with common ante decorators used by many chains. We do extend the standard ante handling flow by rejecting any transactions that contain `MsgEthereumTx` in them ([here](https://github.com/cosmos/evm/blob/main/app/ante/cosmos.go#L19)) and also limit operations that can be delegated to other accounts ([here](https://github.com/cosmos/evm/blob/main/app/ante/cosmos.go#L20-L23)).
 
-Based on the EIP-1559 we have implemented a feemarket solution that dynamically adjusted the required gas for transactions based on the network load. This is checked by a corresponding ante handler for Cosmos transactions too ([here](https://github.com/evmos/evmos/blob/main/app/ante/cosmos.go#L29)).
+Based on the EIP-1559 we have implemented a feemarket solution that dynamically adjusted the required gas for transactions based on the network load. This is checked by a corresponding ante handler for Cosmos transactions too ([here](https://github.com/cosmos/evm/blob/main/app/ante/cosmos.go#L29)).
 
-This is also accompanied by another ante decorator ([here](https://github.com/evmos/evmos/blob/main/app/ante/cosmos.go#L39)), which checks the gas wanted amount of the current block to add into the base fee calculations of the feemarket logic.
+This is also accompanied by another ante decorator ([here](https://github.com/cosmos/evm/blob/main/app/ante/cosmos.go#L39)), which checks the gas wanted amount of the current block to add into the base fee calculations of the feemarket logic.
 
 - **Links to reference implementation**
-    - Inclusion in application instantiation: https://github.com/evmos/evmos/blob/9606a4176136285b9993f572307a828528c4748b/app/app.go#L838
-    - Application method definition: https://github.com/evmos/evmos/blob/9606a4176136285b9993f572307a828528c4748b/app/app.go#L898-L919
-    - Main handler logic which divides EVM and Cosmos transactions: https://github.com/evmos/evmos/blob/main/app/ante/ante.go#L16-L54
-        - Mono handler for EVM transactions: https://github.com/evmos/evmos/blob/main/app/ante/evm/mono.go#L108-L313
-        - Chained handler for Cosmos transactions: https://github.com/evmos/evmos/blob/main/app/ante/cosmos.go#L18-L40
+    - Inclusion in application instantiation: https://github.com/cosmos/evm/blob/9606a4176136285b9993f572307a828528c4748b/app/app.go#L838
+    - Application method definition: https://github.com/cosmos/evm/blob/9606a4176136285b9993f572307a828528c4748b/app/app.go#L898-L919
+    - Main handler logic which divides EVM and Cosmos transactions: https://github.com/cosmos/evm/blob/main/app/ante/ante.go#L16-L54
+        - Mono handler for EVM transactions: https://github.com/cosmos/evm/blob/main/app/ante/evm/mono.go#L108-L313
+        - Chained handler for Cosmos transactions: https://github.com/cosmos/evm/blob/main/app/ante/cosmos.go#L18-L40
 
 ---
 
@@ -340,7 +340,7 @@ On the EVM, sender and recipient addresses are however included in the chain-agn
 
 It is common in the EVM ecosystem to check https://chainid.network/ to pick a suitable unique chain ID and add a corresponding entry to the [Ethereum networks list](https://github.com/ethereum-lists/chains/tree/master/_data/chains) to avoid duplication between chains. Another relevant resource to add the chain ID to is https://github.com/DefiLlama/chainlist/blob/d0d752221c76f5dcc7109bbe5d1d0dc5ecb319f4/constants/chainIds.json#L85.
 
-The expected chain ID format would be `chainname_XXXXX-Y`, where X is the EIP-155 chain ID and Y the increment of chain IDs after e.g. a hard fork has happened. This is enforced in the EVM types in the evmos codebase: https://github.com/evmos/evmos/blob/dc3b28d8bd000b72c9483acc051cf74e43e8b043/types/chain_id.go#L15-L25.
+The expected chain ID format would be `chainname_XXXXX-Y`, where X is the EIP-155 chain ID and Y the increment of chain IDs after e.g. a hard fork has happened. This is enforced in the EVM types in the Cosmos EVM codebase: https://github.com/cosmos/evm/blob/dc3b28d8bd000b72c9483acc051cf74e43e8b043/types/chain_id.go#L15-L25.
 
 ---
 
@@ -381,7 +381,7 @@ func NewRootCmd() *cobra.Command {
 // app/app.go
 import (
 	// ...
-	cvm "https://github.com/evmos/encoding"
+	cvm "https://github.com/cosmos/evm/encoding"
 )
 
 func NewExampleApp(
@@ -399,9 +399,9 @@ The default signature verification ante handler is included in the `DefaultSigVe
 
 Depending on the desired supported keys, this method has to be extended/adjusted to support the `eth_secp256k1` algorithm.
 
-In the case of the Evmos chain, this algorithm is favored over the default `secp256k1` algorithm found in the Cosmos SDK, which is why it is replacing the latter one in its reference implementation of this ante decorator:
+In the case of a Cosmos EVM chain, this algorithm is favored over the default `secp256k1` algorithm found in the Cosmos SDK, which is why it is replacing the latter one in its reference implementation of this ante decorator:
 
-https://github.com/evmos/evmos/blob/v19.2.0/app/ante/sigverify.go#L37-L63
+https://github.com/cosmos/evm/blob/v19.2.0/app/ante/sigverify.go#L37-L63
 
 </details>
 
@@ -409,14 +409,14 @@ https://github.com/evmos/evmos/blob/v19.2.0/app/ante/sigverify.go#L37-L63
 
 ## 💱 **Adjusting The Base Units Of The Network Denomination**
 
-As opposed to Cosmos chains that use micro-units, the Ethereum based chains opt for a base unit of 18 decimals (i.e. atto units). At the current moment, the evmOS codebase is not natively catered to work with micro units, so we would suggest where possible to adjust the chain IDs base denomination to be an atto unit instead.
+As opposed to Cosmos chains that use micro-units, the Ethereum based chains opt for a base unit of 18 decimals (i.e. atto units). At the current moment, the Cosmoss EVM codebase is not natively catered to work with micro units, so we would suggest where possible to adjust the chain IDs base denomination to be an atto unit instead.
 
 <details>
 	<summary>Click to expand</summary>
 
 **Possible Solution**
     
-Kava has implemented a solution that is making use of both, i.e. `ukava` and `akava`. This might also be a suitable solution for any evmOS partners but it could cause unnecessary overhead and complication when integrating evmOS into the codebase.
+Kava has implemented a solution that is making use of both, i.e. `ukava` and `akava`. This might also be a suitable solution for any Cosmos EVM partners but it could cause unnecessary overhead and complication when integrating Cosmos EVM into the codebase.
     
 **Implementation Details**
     
@@ -432,7 +432,7 @@ This design holds two separate balances of these denominations and converts them
 
 Naturally when adding new modules to the chain there will be a migration necessary in terms of initialising the new parameters during the upgrade as well as adding the new key value stores for the added modules. This will require a coordinated chain upgrade as detailed e.g. in [our upgrades documentation](https://evm.cosmos.network/validate/upgrades).
 
-Check the [EVM](https://github.com/evmos/evmos/blob/ceae6608955f1279546066dad1a53a53593790cd/proto/ethermint/evm/v1/evm.proto#L11-L34) and [feemarket](https://github.com/evmos/evmos/blob/ceae6608955f1279546066dad1a53a53593790cd/proto/ethermint/feemarket/v1/feemarket.proto#L12-L44) module parameters for an overview of the fields to set with the desired values.
+Check the [EVM](https://github.com/cosmos/evm/blob/ceae6608955f1279546066dad1a53a53593790cd/proto/ethermint/evm/v1/evm.proto#L11-L34) and [feemarket](https://github.com/cosmos/evm/blob/ceae6608955f1279546066dad1a53a53593790cd/proto/ethermint/feemarket/v1/feemarket.proto#L12-L44) module parameters for an overview of the fields to set with the desired values.
 
 
 ---
@@ -444,7 +444,7 @@ There is a selection of different CLI commands that are unique to the Cosmos EVM
 <details>
 	<summary>Click to expand</summary>
 
-- `appd keys` is extended by utilities to import and export Ethereum native hexadecimal private keys: https://github.com/evmos/evmos/blob/v18.1.0/client/keys.go#L19-L83.
+- `appd keys` is extended by utilities to import and export Ethereum native hexadecimal private keys: https://github.com/cosmos/evm/blob/v18.1.0/client/keys.go#L19-L83.
     
     If this should be supported, it is required to also adjust the client context and initialize the context with the corresponding keyring options:
     
@@ -454,9 +454,9 @@ There is a selection of different CLI commands that are unique to the Cosmos EVM
     	WithKeyringOptions(evmoskeyring.Option())
     ```
     
-- `appd debug` and its subcommands provide useful utilities for address conversion and other debugging / development related purposes: https://github.com/evmos/evmos/blob/v18.1.0/client/debug/debug.go#L28-L42.
-- `appd block` exports the last block from the database of the node (instead of querying from network): https://github.com/evmos/evmos/blob/v18.1.0/client/block/block.go#L15-L72.
-- `appd add-genesis-account` can be used as a reference for add new accounts to a given genesis JSON file: https://github.com/evmos/evmos/blob/v18.1.0/cmd/evmosd/genaccounts.go#L39-L285. Note, that this usually is reimplemented for every chain’s specific use-case.
+- `appd debug` and its subcommands provide useful utilities for address conversion and other debugging / development related purposes: https://github.com/cosmos/evm/blob/v18.1.0/client/debug/debug.go#L28-L42.
+- `appd block` exports the last block from the database of the node (instead of querying from network): https://github.com/cosmos/evm/blob/v18.1.0/client/block/block.go#L15-L72.
+- `appd add-genesis-account` can be used as a reference for add new accounts to a given genesis JSON file: https://github.com/cosmos/evm/blob/v18.1.0/cmd/evmosd/genaccounts.go#L39-L285. Note, that this usually is reimplemented for every chain’s specific use-case.
 
 </details>
 
@@ -498,7 +498,7 @@ To do so, include the following command in the initialization of the root comman
     // app/app.go
     import (
     	// ...
-    	cevmencoding "https://github.com/evmos/evmos/v18/encoding"
+    	cevmencoding "https://github.com/cosmos/evm/v18/encoding"
     	cevmeip712 "github.com/cosmos/evm/ethereum/eip712"
     )
     
@@ -548,6 +548,6 @@ After onboarding to Cosmos EVM your chain now has a proven EVM implementation av
 
 This amazing new experience can be improved even more:
 
-- Unify ERC-20s and Cosmos Coins with the *Single Token Representation v2*.
-- Enable EVM Extensions or add your own custom implementations, that let smart contract developers and EVM users access your Cosmos SDK module functionality! More information can be found here: https://evm.cosmos.network/develop/smart-contracts/evm-extensions.
-- Add more functionality from the https://evm.cosmos.network/protocol/modules.
+- Unify ERC-20s and Cosmos Coins with the *[Single Token Representation v2](./unify-erc-20s-and-cosmos-coins/)*.
+- Enable precompiles or add your own custom implementations, that let smart contract developers and EVM users access your Cosmos SDK module functionality! More information can be found [here](../develop/smart-contracts/cosmos-sdk-precompiles/)
+- Add more functionality from the [Cosmos EVM Modules](../protocol/modules/).

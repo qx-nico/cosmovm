@@ -2,13 +2,13 @@
 sidebar_position: 3
 ---
 
-# Adding The Bank EVM Extension
+# Adding The Bank EVM Precompile
 
-STR v2 enables native coin transfers through EVM interfaces. This is enabled through the bank EVM extension, which provides the corresponding logic that relates to the token transfer methods native to the EVM.
+STR v2 enables native coin transfers through EVM interfaces. This is enabled through the `x/bank` precompile, which provides the corresponding logic that relates to the token transfer methods native to the EVM.
 
-This EVM extension needs to be enabled. If you have not yet enabled any EVM extensions on your chain, please read [Enable EVM Extensions](https://www.notion.so/Enable-EVM-Extensions-81f1186d25ec4c7a8fd951e644c6802c?pvs=21) prior to continuing with this document.
+This precompile needs to be enabled. If you have not yet enabled any precompiles on your chain, please read [Enable Precompiles](./../enable-precompiles.md) prior to continuing with this document.
 
-In short, to enable the bank extension, add it to the provider function that builds the map of precompiled contracts which is passed to the EVM keeper upon creation.
+In short, to enable the bank precompiles, add it to the provider function that builds the map of precompiled contracts which is passed to the EVM keeper upon creation.
 
 ```go
 func ProvideEVMExtensions(
@@ -30,6 +30,6 @@ func ProvideEVMExtensions(
 }
 ```
 
-Furthermore, it is required to **enable the bank EVM extension in the EVM module parameters**. This can be done through a corresponding module upgrade proposal that goes through governance. However, since it is required that the introduction of this feature goes hand in hand with a chain upgrade, we recommend to just enable the extension during the upgrade process as well by creating a dedicated upgrade handler.
+Furthermore, it is required to **enable the bank precompile in the EVM module parameters**. This can be done through a corresponding module upgrade proposal that goes through governance. However, since it is required that the introduction of this feature goes hand in hand with a chain upgrade, we recommend to just enable the precompile during the upgrade process as well by creating a dedicated upgrade handler.
 
-An example to enable an EVM extension in an upgrade handler is shown here: https://altiplanic.notion.site/Enable-EVM-Extensions-81f1186d25ec4c7a8fd951e644c6802c#be2260f3b3734d4b8b44532fe2898b1a
+An example to enable a precompile in an upgrade handler is shown [here](./../enable-precompiles.md).

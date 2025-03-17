@@ -2,11 +2,11 @@
 sidebar_position: 2
 ---
 
-# List of EVM Extensions
+# List of EVM Precompiles
 
-## Available Extensions
+## Available Precompiles
 
-The following extensions are available in Cosmos EVM:
+The following precompiles are available in Cosmos EVM:
 
 | Address                                      | Name                | Stateful | EIP                                               | Testnet                  | Mainnet                  |
 | -------------------------------------------- | ------------------- | -------- | ------------------------------------------------- | ------------------------ | ------------------------ |
