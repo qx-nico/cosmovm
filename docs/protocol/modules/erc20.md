@@ -5,7 +5,7 @@
 This document specifies the internal `x/erc20` module of the Cosmos EVM.
 
 The `x/erc20` module enables the Cosmos EVM to support a trustless, on-chain bidirectional internal conversion of tokens
-between the EVM and Cosmos runtimes, specifically the `x/evm` and `x/bank` modules.
+between the EVM and Cosmos runtimes, specifically the `x/vm` and `x/bank` modules.
 This allows token holders on a Cosmos EVM chain to instantaneously convert their native Cosmos `sdk.Coins`
 (in this document referred to as "Coin(s)") to ERC-20 (aka "Token(s)") and vice versa,
 while retaining fungibility with the original asset on the issuing environment/runtime (EVM or Cosmos)

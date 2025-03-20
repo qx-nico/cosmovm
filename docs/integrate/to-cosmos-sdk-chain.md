@@ -46,8 +46,7 @@ To start off, the necessary module imports need to be added to the `go.mod` file
     Add the corresponding module import for the desired version of Cosmos EVM to the go module file.
     
     ```bash
-    go get github.com/cosmos/evm/v19.1.0
-    #                              ^ --- adjust version to desired one
+    go get github.com/cosmos/evm
     ```
     
 - **Cosmos SDK**
@@ -121,7 +120,7 @@ As the next step to integrate the EVM OS, it is required to add the necessary ap
 <details>
 	<summary>Click to expand</summary>
 
-The EVM can be added to your application, by adding the necessary logic to add the `x/evm` module. Note, that this is wired together with the EIP-1559 feemarket solution that lives in the `x/feemarket` module.
+The EVM can be added to your application, by adding the necessary logic to add the `x/vm` module. Note, that this is wired together with the EIP-1559 feemarket solution that lives in the `x/feemarket` module.
 
 **Basic Wiring**
 
@@ -145,8 +144,8 @@ The module keeper fields will have to be added to the main application struct to
 ```go
 import (
 	// ...
-	evmkeeper "github.com/cosmos/evm/v19/x/evm/keeper"
-	feemarketkeeper "github.com/cosmos/evm/v19/x/feemarket/keeper"
+	evmkeeper "github.com/cosmos/evm/x/vm/keeper"
+	feemarketkeeper "github.com/cosmos/evm/x/feemarket/keeper"
 )
 
 type ExampleApp struct {
@@ -168,11 +167,11 @@ In case, that only the default Ethereum behavior is desired, the instantiation c
 	// app/app.go
 	import (
 		// ...
-		"github.com/cosmos/evm/v19/x/evm/core/vm"
-		evmkeeper "github.com/cosmos/evm/v19/x/evm/keeper"
-		evmtypes "github.com/cosmos/evm/v19/x/evm/types"
-		feemarketkeeper "github.com/cosmos/evm/v19/x/feemarket/keeper"
-		feemarkettypes "github.com/cosmos/evm/v19/x/feemarket/types"
+		"github.com/cosmos/evm/x/vm/core/vm"
+		evmkeeper "github.com/cosmos/evm/x/vm/keeper"
+		evmtypes "github.com/cosmos/evm/x/vm/types"
+		feemarketkeeper "github.com/cosmos/evm/x/feemarket/keeper"
+		feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
 		srvflags "github.com/cosmos/evm/server/flags"
 	)
 	

@@ -29,7 +29,7 @@ There are two distinct steps required to accept unprotected transactions, i.e. t
 in the signed transaction data:
 
 1. **Disable Module Parameter**:
-The [EVM module](../modules/evm.md#parameters) contains a governance controlled parameter,
+The [EVM module](../modules/vm#parameters) contains a governance controlled parameter,
 that globally dictates if unprotected transactions are supported.
 This has to be disabled via a governance vote or
 by setting the `allow_unprotected_txs` field to `true` in the genesis of a local node.

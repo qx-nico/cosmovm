@@ -1,4 +1,4 @@
-# `evm`
+# `vm`
 
 ## Abstract
 
@@ -20,7 +20,7 @@ because of its wide range of deployed applications.
 A solution is required that eliminates these concerns for developers,
 who build applications within a familiar EVM environment.
 
-The `x/evm` module provides this EVM familiarity on a scalable, high-throughput Proof-of-Stake blockchain.
+The `x/vm` module provides this EVM familiarity on a scalable, high-throughput Proof-of-Stake blockchain.
 It is built as a [Cosmos SDK module](https://docs.cosmos.network/main/build/building-modules/intro)
 which allows for the deployment of smart contracts,
 interaction with the EVM state machine (state transitions),
@@ -30,7 +30,7 @@ which alleviate the aforementioned concerns through high transaction throughput
 via [Tendermint Core](https://github.com/tendermint/tendermint), fast transaction finality,
 and horizontal scalability via [IBC](https://ibcprotocol.org/).
 
-The `x/evm` module is part of the [Cosmos EVM library](https://pkg.go.dev/github.com/cosmos/evm).
+The `x/vm` module is part of the [Cosmos EVM library](https://pkg.go.dev/github.com/cosmos/evm).
 
 ## Contents
 
@@ -51,7 +51,7 @@ the SDK modules, please check this [document](https://docs.cosmos.network/main/b
 prerequisite reading.
 
 ```shell
-evm/
+vm/
 ├── client
 │   └── cli
 │       ├── query.go      # CLI query commands for the module
@@ -108,7 +108,7 @@ To make a clear distinction:
   It is an isolated runtime, which means
   that code running inside the EVM has no access to network, filesystem, or other processes (not external APIs).
 
-The `x/evm` module implements the EVM as a Cosmos SDK module.
+The `x/vm` module implements the EVM as a Cosmos SDK module.
 It allows users to interact with the EVM by submitting Ethereum txs
 and executing their containing messages on the given state to evoke a state transition.
 
@@ -241,33 +241,33 @@ The Cosmos EVM implementation is similar and makes use of the gRPC query client 
 2. [`Call()`](https://github.com/cosmos/evm/blob/main/rpc/namespaces/ethereum/eth/api.go) calls `doCall()`
 3. [`doCall()`](https://github.com/cosmos/evm/blob/main/rpc/namespaces/ethereum/eth/api.go)
    transforms the arguments into a `EthCallRequest` and calls `EthCall()` using the query client of the evm module.
-4. [`EthCall()`](https://github.com/cosmos/evm/blob/main/x/evm/keeper/grpc_query.go)
+4. [`EthCall()`](https://github.com/cosmos/evm/blob/main/x/vm/keeper/grpc_query.go)
    transforms the arguments into a `ethtypes.message` and calls `ApplyMessageWithConfig()
-5. [`ApplyMessageWithConfig()`](https://github.com/cosmos/evm/blob/d5598932a7f06158b7a5e3aa031bbc94eaaae32c/x/evm/keeper/state_transition.go)
+5. [`ApplyMessageWithConfig()`](https://github.com/cosmos/evm/blob/d5598932a7f06158b7a5e3aa031bbc94eaaae32c/x/vm/keeper/state_transition.go)
    instantiates an EVM and either `Create()`s a new contract or `Call()`s a contract using the Geth implementation.
 
 #### StateDB
 
 The `StateDB` interface from [go-ethereum](https://github.com/ethereum/go-ethereum/blob/master/core/vm/interface.go)
 represents an EVM database for full state querying.
-EVM state transitions are enabled by this interface, which in the `x/evm` module is implemented by the `Keeper`.
+EVM state transitions are enabled by this interface, which in the `x/vm` module is implemented by the `Keeper`.
 The implementation of this interface is what makes the Cosmos EVM compatible.
 
 ### Consensus Engine
 
-The application using the `x/evm` module interacts with the Tendermint Core Consensus Engine
+The application using the `x/vm` module interacts with the Tendermint Core Consensus Engine
 over an Application Blockchain Interface (ABCI).
 Together, the application and Tendermint Core form the programs that run a complete blockchain
 and combine business logic with decentralized data storage.
 
-Ethereum transactions which are submitted to the `x/evm` module take part in this consensus process
+Ethereum transactions which are submitted to the `x/vm` module take part in this consensus process
 before being executed and changing the application state.
 We encourage to understand the basics of the [Tendermint consensus engine](https://docs.tendermint.com/main/introduction/what-is-tendermint.html#intro-to-abci)
 in order to understand state transitions in detail.
 
 ### Transaction Logs
 
-On every `x/evm` transaction, the result contains the Ethereum `Log`s from the state machine execution
+On every `x/vm` transaction, the result contains the Ethereum `Log`s from the state machine execution
 that are used by the JSON-RPC Web3 server for filter querying and for processing the EVM Hooks.
 
 The tx logs are stored in the transient store during tx execution
@@ -288,13 +288,13 @@ A user must use an archival node after upgrades in order to obtain legacy chain 
 
 ## State
 
-This section gives you an overview of the objects stored in the `x/evm` module state,
+This section gives you an overview of the objects stored in the `x/vm` module state,
 functionalities that are derived from the go-ethereum `StateDB` interface,
 and its implementation through the Keeper as well as the state implementation at genesis.
 
 ### State Objects
 
-The `x/evm` module keeps the following objects in state:
+The `x/vm` module keeps the following objects in state:
 
 #### State
 
@@ -309,7 +309,7 @@ The `x/evm` module keeps the following objects in state:
 
 ### StateDB
 
-The `StateDB` interface is implemented by the `StateDB` in the `x/evm/statedb` module
+The `StateDB` interface is implemented by the `StateDB` in the `x/vm/statedb` module
 to represent an EVM database for full state querying of both contracts and accounts.
 Within the Ethereum protocol, `StateDB`s are used to store anything
 within the IAVL tree and take care of caching and storing nested states.
@@ -369,7 +369,7 @@ type StateDB interface {
 }
 ```
 
-The `StateDB` in the `x/evm` provides the following functionalities:
+The `StateDB` in the `x/vm` provides the following functionalities:
 
 #### CRUD of Ethereum accounts
 
@@ -548,7 +548,7 @@ type Keeper struct {
 
 ### Genesis State
 
-The `x/evm` module `GenesisState` defines the state necessary for initializing the chain from a previous exported height.
+The `x/vm` module `GenesisState` defines the state necessary for initializing the chain from a previous exported height.
 It contains the `GenesisAccounts` and the module parameters
 
 ```go
@@ -588,7 +588,7 @@ type GenesisAccount struct {
 
 ## State Transitions
 
-The `x/evm` module allows for users to submit Ethereum transactions (`Tx`)
+The `x/vm` module allows for users to submit Ethereum transactions (`Tx`)
 and execute their containing messages to evoke state transitions on the given state.
 
 Users submit transactions client-side to broadcast it to the network.
@@ -633,7 +633,7 @@ Each `Tx` is handled by the application by calling [`RunTx`](https://docs.cosmos
 After a stateless validation on each `sdk.Msg` in the `Tx`,
 the `AnteHandler` confirms whether the `Tx` is an Ethereum or SDK transaction.
 As an Ethereum transaction it's containing msgs are then handled
-by the `x/evm` module to update the application's state.
+by the `x/vm` module to update the application's state.
 
 #### AnteHandler
 
@@ -684,7 +684,7 @@ Click [here](https://docs.cosmos.network/main/learn/beginner/gas-fees.html#anteh
 
 After authentication through the `antehandler`,
 each `sdk.Msg` (in this case `MsgEthereumTx`) in the `Tx`
-is delivered to the Msg Handler in the `x/evm` module
+is delivered to the Msg Handler in the `x/vm` module
 and runs through the following the steps:
 
 1. Convert `Msg` to an ethereum `Tx` type
@@ -961,7 +961,7 @@ This message field validation is expected to fail if:
 
 The Application Blockchain Interface (ABCI) allows the application to interact with the Tendermint Consensus engine.
 The application maintains several ABCI connections with Tendermint.
-The most relevant for the  `x/evm` is the [Consensus connection at Commit](https://docs.tendermint.com/v0.33/app-dev/app-development.html#consensus-connection).
+The most relevant for the  `x/vm` is the [Consensus connection at Commit](https://docs.tendermint.com/v0.33/app-dev/app-development.html#consensus-connection).
 This connection is responsible for block execution and calls the functions `InitChain`
 (containing `InitGenesis`), `BeginBlock`, `DeliverTx`, `EndBlock`, `Commit` .
 `InitChain` is only called the first time a new blockchain is started
@@ -1000,7 +1000,7 @@ The main objective of this function is to:
 
 ## Hooks
 
-The `x/evm` module implements an `EvmHooks` interface that extend and customize the `Tx` processing logic externally.
+The `x/vm` module implements an `EvmHooks` interface that extend and customize the `Tx` processing logic externally.
 
 This supports EVM contracts to call native cosmos modules by
 
@@ -1203,7 +1203,7 @@ app.EvmKeeper = app.EvmKeeper.SetHooks(app.Erc20Keeper)
 
 ## Events
 
-The `x/evm` module emits the Cosmos SDK events after a state execution.
+The `x/vm` module emits the Cosmos SDK events after a state execution.
 The EVM module emits events of the relevant transaction fields, as well as the transaction logs (ethereum events).
 
 ### MsgEthereumTx
@@ -1364,7 +1364,7 @@ A user can query and interact with the `evm` module using the CLI, JSON-RPC, gRP
 
 ### CLI
 
-Find below a list of `simd` commands added with the `x/evm` module.
+Find below a list of `simd` commands added with the `x/vm` module.
 You can obtain the full list by using the `simd -h` command.
 
 #### Queries
@@ -1440,7 +1440,7 @@ please refer to [https://docs.cosmos.network/develop/api/ethereum-json-rpc/metho
 | `gRPC` | `ethermint.evm.v1.Query/Balance`                     | Get the balance of a the EVM denomination for a single EthAccount.        |
 | `gRPC` | `ethermint.evm.v1.Query/Storage`                     | Get the balance of all coins for a single account                         |
 | `gRPC` | `ethermint.evm.v1.Query/Code`                        | Get the balance of all coins for a single account                         |
-| `gRPC` | `ethermint.evm.v1.Query/Params`                      | Get the parameters of x/evm module                                        |
+| `gRPC` | `ethermint.evm.v1.Query/Params`                      | Get the parameters of x/vm module                                        |
 | `gRPC` | `ethermint.evm.v1.Query/EthCall`                     | Implements the eth_call rpc api                                           |
 | `gRPC` | `ethermint.evm.v1.Query/EstimateGas`                 | Implements the eth_estimateGas rpc api                                    |
 | `gRPC` | `ethermint.evm.v1.Query/TraceTx`                     | Implements the debug_traceTransaction rpc api                             |
@@ -1451,7 +1451,7 @@ please refer to [https://docs.cosmos.network/develop/api/ethereum-json-rpc/metho
 | `GET`  | `/ethermint/evm/v1/balances/{address}`               | Get the balance of a the EVM denomination for a single EthAccount.        |
 | `GET`  | `/ethermint/evm/v1/storage/{address}/{key}`          | Get the balance of all coins for a single account                         |
 | `GET`  | `/ethermint/evm/v1/codes/{address}`                  | Get the balance of all coins for a single account                         |
-| `GET`  | `/ethermint/evm/v1/params`                           | Get the parameters of x/evm module                                        |
+| `GET`  | `/ethermint/evm/v1/params`                           | Get the parameters of x/vm module                                        |
 | `GET`  | `/ethermint/evm/v1/eth_call`                         | Implements the eth_call rpc api                                           |
 | `GET`  | `/ethermint/evm/v1/estimate_gas`                     | Implements the eth_estimateGas rpc api                                    |
 | `GET`  | `/ethermint/evm/v1/trace_tx`                         | Implements the debug_traceTransaction rpc api                             |

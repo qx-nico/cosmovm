@@ -18,7 +18,7 @@ compilation converts the human-readable contract code into a sequence of operati
 that the virtual machine can interpret and execute
 to perform state transitions or query the latest committed state.
 These operations are called **opcodes**, and are contained
-in a structure called [**jump table**](https://github.com/cosmos/evm/blob/v19.0.0/x/evm/core/vm/jump_table.go#L120-L1094).
+in a structure called [**jump table**](https://github.com/cosmos/evm/blob/main/x/vm/core/vm/jump_table.go#L120-L1094).
 
 Each opcode is defined by specifying the logic that has to be executed when it
 is called inside the EVM, its relationship with the memory, and the gas cost

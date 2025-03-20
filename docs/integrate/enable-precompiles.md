@@ -32,17 +32,17 @@ import (
 	"golang.org/x/exp/maps"
 	
 	// EVM Types
-	"github.com/cosmos/evm/v19/x/evm/core/vm"
-	"github.com/cosmos/evm/v19/x/evm/types"
+	"github.com/cosmos/evm/x/vm/core/vm"
+	"github.com/cosmos/evm/x/vm/types"
 	
 	// Keepers
 	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
 	distributionkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
-	stakingkeeper "github.com/cosmos/evm/v19/x/staking/keeper"
+	stakingkeeper "github.com/cosmos/evm/x/staking/keeper"
 	
 	// EVM precompiles
-	distprecompile "github.com/cosmos/evm/v19/precompiles/distribution"
-	stakingprecompile "github.com/cosmos/evm/v19/precompiles/staking"
+	distprecompile "github.com/cosmos/evm/precompiles/distribution"
+	stakingprecompile "github.com/cosmos/evm/precompiles/staking"
 )
 
 func ProvideEVMExtensions(
