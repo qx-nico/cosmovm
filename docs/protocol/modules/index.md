@@ -9,7 +9,7 @@ Here is a list of some of the production-grade modules that can be used in the C
 - [epochs](epochs.md) - Executes custom state transitions every period (*aka* epoch).
 - [erc20](erc20.md) - Trustless, on-chain bidirectional internal conversion of tokens
   between EVM and Cosmos runtimes.
-- [evm](evm.md) - Smart Contract deployment and execution on Cosmos
+- [evm](vm) - Smart Contract deployment and execution on Cosmos
 - [feemarket](feemarket.md) - Fee market implementation based on the EIP-1559 specification.
 
 ## Cosmos SDK

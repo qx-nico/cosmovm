@@ -63,7 +63,7 @@ allows for quick reconstruction of encoded data. Cosmos EVM uses RLP to encode/d
 messages for JSON-RPC handling to conform messages to the proper Ethereum format. This allows
 messages to be encoded and decoded in the exact format as Ethereum's.
 
-The `x/evm` transactions (`MsgEthereumTx`) encoding is performed by casting the message to a go-ethereum's `Transaction`
+The `x/vm` transactions (`MsgEthereumTx`) encoding is performed by casting the message to a go-ethereum's `Transaction`
 and then marshaling the transaction data using RLP:
 
 ```go

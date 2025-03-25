@@ -22,7 +22,7 @@ and other mechanisms implemented by the [Cosmos SDK](https://docs.cosmos.network
 to manage the blockchain.
 * Utilizing [`geth`](https://github.com/ethereum/go-ethereum) as a library to promote code reuse and improve maintainability.
 * Exposing a fully compatible Web3 [JSON-RPC](./../develop/api/ethereum-json-rpc/methods) layer
-for interacting with existing Ethereum clients and tooling (Metamask, Remix, Truffle, etc).
+for interacting with existing Ethereum clients and tooling (Metamask, Remix, etc).
 
 The sum of these features allows developers to leverage existing Ethereum ecosystem tooling and
 software to seamlessly deploy smart contracts which interact with the rest of the Cosmos
@@ -64,7 +64,7 @@ while ensuring the same developer experience as Ethereum:
 - `StateDB` interface for state updates and queries
 - [JSON-RPC](../develop/api/ethereum-json-rpc) client for interacting with the EVM
 
-Most components are implemented in the [EVM module](modules/evm.md)
+Most components are implemented in the [VM module](modules/vm.md)
 To achieve a seamless developer UX, however, some of the components are implemented
 outside of the module.
 
