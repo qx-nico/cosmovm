@@ -2,6 +2,16 @@
 
 This guide provides detailed steps to convert a standard Cosmos SDK chain into an EVM-compatible chain. Follow these instructions carefully to add Ethereum Virtual Machine functionality to your existing Cosmos SDK blockchain.
 
+This guide is specifically designed for chains that haven't launched yet. If you're building a new Cosmos SDK chain and want to include EVM compatibility from the start, these instructions will walk you through the process step by step.
+
+⚠️ For chains that are already live, adding EVM compatibility is more complex and involves significant considerations:
+- **Account System Changes:** The conversion impacts the existing account system, potentially requiring address migration or mapping between Cosmos and Ethereum address formats.
+- **Tokenonomics:** Changes to token decimal places (from Cosmos standard 6 to Ethereum standard 18) impacts all existing balances and tokenomics.
+- **Infrastructure Updates:** All validators, indexers, wallets, and other infrastructure providers need to update their software.
+- **Asset Migration:** Existing assets may need conversion or wrapping to be mirrored in the EVM.
+
+Detailed instructions for upgrading existing chains are still in development and will be provided in a future guide.
+
 ## Prerequisites
 
 - A working Cosmos SDK chain on v0.50.x
