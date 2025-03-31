@@ -178,9 +178,9 @@ func setBaseDenom(ci evmtypes.EvmCoinInfo) error {
 }
 ```
 
-## Step 4: OPTIONAL: Create Token Pair Configuration
+## Step 4: Create Token Pair Configuration
 
-Create a new file `app/token_pair.go` with the following content. This is used as a template in the DefaultGenesis function for testing:
+Create a new file `app/token_pair.go` with the following content. This is used as a mock token pair the DefaultGenesis function for testing and for spinning up a local chain:
 ```go
 package app
 
