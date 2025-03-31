@@ -7,8 +7,7 @@ This guide is specifically designed for chains that haven't launched yet. If you
 ⚠️ For chains that are already live, adding EVM compatibility is more complex and involves significant considerations:
 - **Account System Changes:** The conversion impacts the existing account system, potentially requiring address migration or mapping between Cosmos and Ethereum address formats.
 - **Tokenonomics:** Changes to token decimal places (from Cosmos standard 6 to Ethereum standard 18) impacts all existing balances and tokenomics.
-- **Infrastructure Updates:** All validators, indexers, wallets, and other infrastructure providers need to update their software.
-- **Asset Migration:** Existing assets may need conversion or wrapping to be mirrored in the EVM.
+- **Asset Migration:** Existing assets need to be initialized and mirrored in the EVM.
 
 Detailed instructions for upgrading existing chains are still in development and will be provided in a future guide.
 
