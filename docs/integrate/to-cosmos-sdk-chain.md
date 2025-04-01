@@ -494,7 +494,7 @@ app.EVMKeeper.WithStaticPrecompiles(
 )
 ```
 
-7. Update TransferKeeper initialization to include ERC20Keeper.
+9. Update TransferKeeper initialization to include ERC20Keeper.
 
 Note that the IBC keeper is an extended version from the `x/ibc` module from Cosmos EVM:
 
@@ -525,7 +525,7 @@ app.TransferKeeper = ibctransferkeeper.NewKeeper(
 )
 ```
 
-8. Add EVM modules to app modules:
+10. Add EVM modules to app modules:
 ```go
 app.ModuleManager = module.NewManager(
     // ... existing modules
@@ -537,7 +537,7 @@ app.ModuleManager = module.NewManager(
 )
 ```
 
-9. Update module ordering:
+11. Update module ordering:
 ```go
 app.ModuleManager.SetOrderBeginBlockers(
     minttypes.ModuleName,
@@ -568,7 +568,7 @@ genesisModuleOrder := []string{
 
 ```
 
-10. Update Ante handler options:
+12. Update Ante handler options:
 ```go
 options := chainante.HandlerOptions{
     // Add these options
@@ -583,7 +583,7 @@ options := chainante.HandlerOptions{
 }
 ```
 
-11. Update the DefaultGenesis method to include EVM genesis:
+13. Update the DefaultGenesis method to include EVM genesis:
 ```go
 func (a *ChainApp) DefaultGenesis() map[string]json.RawMessage {
     genesis := a.BasicModuleManager.DefaultGenesis(a.appCodec)
@@ -608,7 +608,7 @@ func (a *ChainApp) DefaultGenesis() map[string]json.RawMessage {
 }
 ```
 
-12. Update blocked addresses to include precompiles:
+14. Update blocked addresses to include precompiles:
 ```go
 func BlockedAddresses() map[string]bool {
     // Add after existing code:
@@ -625,7 +625,7 @@ func BlockedAddresses() map[string]bool {
 }
 ```
 
-13. Update params keeper subspaces:
+15. Update params keeper subspaces:
 ```go
 // Add these lines:
 paramsKeeper.Subspace(evmtypes.ModuleName)
