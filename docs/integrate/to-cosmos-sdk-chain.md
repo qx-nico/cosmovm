@@ -42,53 +42,65 @@ replace (
 )
 ```
 
-## Step 2: Update Chain Configuration Settings
+## Step 2: Update Chain Configuration
 
-### Update Chain ID Format
-Modify your chain ID to use EVM-compatible format. Example: Change from "localchain-1" to "localchain_9000-1".
-```bash
-# 
-# For example, update in the following files (if your project has them):
-# - Makefile
-# - app/app.go 
-# - chains/standalone.json
-# - chains/self-ibc.json
-# - chains/testnet.json
-# - scripts/test_node.sh
-```
+**Purpose:** To align fundamental chain parameters with EVM conventions for compatibility with Ethereum tooling and standards.
 
-### Update Coin Type
-Change the coin type value from 118 (Cosmos) to 60 (Ethereum) if your chain has that explicitly defined:
-```bash
-# In app/app.go:
-# CoinType uint32 = 60
+**Changes:**
 
-# In chain_registry.json:
-# "slip44": 60,
+1.  **Chain ID Format:** Ethereum tools often expect chain IDs in a specific format (e.g., `name_number-version`). Update your chain ID accordingly.
+    *   **Example:** `"mychain-1"` -> `"mychain_9000-1"`
+    *   **Locations & Examples:**
+        *   `app/app.go`: `const ChainID = "mychain_9000-1"`
+        *   `Makefile`: Search and replace `localchain-1` or similar with `mychain_9000-1`.
+        *   `scripts/*.sh`: Update `CHAIN_ID` variables.
+        *   `chains/*.json`: Update `"chain_id": "mychain_9000-1"`.
+        *   `interchaintest/*`: Update chain ID constants/variables.
 
-# In test files & chain configs:
-# "coin_type": "60",
-```
+2.  **Coin Type (SLIP-0044):** Change from `118` (Cosmos default) to `60` (Ethereum standard) for key derivation compatibility.
+    *   **Locations & Examples:**
+        *   `app/app.go`: `const CoinType uint32 = 60`
+        *   `chain_registry.json`: `"slip44": 60`
+        *   `chains/*.json`: `"coin_type": 60`
+        *   `interchaintest/*`: Update coin type constants/variables.
 
-### Update BaseDenomUnit
-Change base denom unit from 6 (Cosmos) to 18 (EVM):
-```bash
-# In app/app.go:
-# BaseDenomUnit int64 = 18
+3.  **Base Denomination Units:** Change from `6` decimals (Cosmos convention) to `18` decimals (EVM/Ethereum standard). This impacts how token amounts are represented.
+    *   **Locations & Examples:**
+        *   `app/app.go`: `const BaseDenomUnit int64 = 18`
+        *   `chain_registry_assets.json`:
+            ```json
+            {
+              // ...
+              "denom_units": [
+                // ...
+                {
+                  "denom": "token", // Or your base denom
+                  "exponent": 18
+                }
+              ],
+              // ...
+            }
+            ```
 
-# In chain_registry_assets.json:
-# "exponent": 18
-```
+4.  **SDK Power Reduction:** The SDK calculates voting power based on staked tokens. Since the base unit changed (10^6 -> 10^18), update the power reduction factor to match.
+    *   **Location:** Add an `init()` function in `app/app.go`:
+        ```go
+        import (
+            "math/big"
+            "cosmossdk.io/math"
+            sdk "github.com/cosmos/cosmos-sdk/types"
+        )
 
-### Add SDK Power Reduction Update
-In app/app.go, add the following init function:
-```go
-func init() {
-	// manually update the power reduction based on the base denom unit (10^18 [evm] or 10^6 [cosmos]) 
-	//DefaultPowerReduction is the default amount of staking tokens required for 1 unit of consensus-engine power
-    sdk.DefaultPowerReduction = math.NewIntFromBigInt(new(big.Int).Exp(big.NewInt(10), big.NewInt(BaseDenomUnit), nil))
-}
-```
+        // BaseDenomUnit should be defined in the same file or imported
+        // const BaseDenomUnit int64 = 18
+
+        func init() {
+            // Update power reduction based on the new 18-decimal base unit
+            sdk.DefaultPowerReduction = math.NewIntFromBigInt(new(big.Int).Exp(big.NewInt(10), big.NewInt(BaseDenomUnit), nil))
+        }
+        ```
+
+---
 
 ## Step 3: Create EVM Configuration File
 
@@ -347,7 +359,8 @@ import (
     "math/big"
     "cosmossdk.io/math"
     ante "github.com/cosmos/evm/ante"
-    evmante "github.com/cosmos/evm/ante/evm"
+    evmevmante "github.com/cosmos/evm/ante/evm"
+	evmante "github.com/cosmos/evm/ante"
     evmencoding "github.com/cosmos/evm/encoding"
     srvflags "github.com/cosmos/evm/server/flags"
     cosmosevmtypes "github.com/cosmos/evm/types"
@@ -365,9 +378,13 @@ import (
     evmkeeper "github.com/cosmos/evm/x/vm/keeper"
     evmtypes "github.com/cosmos/evm/x/vm/types"
     
-    // Replace default transfer with EVM's transfer
-    transfer "github.com/cosmos/evm/x/ibc/transfer"
-    ibctransferkeeper "github.com/cosmos/evm/x/ibc/transfer/keeper"
+	// Replace default transfer with EVM's transfer (if using IBC)
+	transfer "github.com/cosmos/evm/x/ibc/transfer"
+	ibctransferkeeper "github.com/cosmos/evm/x/ibc/transfer/keeper"
+
+	// Remove standard transfer imports if replacing
+	// "github.com/cosmos/ibc-go/v8/modules/apps/transfer"
+	// ibctransferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
 )
 ```
 
@@ -375,9 +392,9 @@ import (
 ```go
 var maccPerms = map[string][]string{
     // Add these entries
-    evmtypes.ModuleName:          {authtypes.Minter, authtypes.Burner},
-    feemarkettypes.ModuleName:    nil,
-    erc20types.ModuleName:        {authtypes.Minter, authtypes.Burner},
+	evmtypes.ModuleName:       {authtypes.Minter, authtypes.Burner}, // Allows EVM module to mint/burn
+	feemarkettypes.ModuleName: nil,                                  // Fee market doesn't need permissions
+	erc20types.ModuleName:     {authtypes.Minter, authtypes.Burner}, // Allows erc20 module to mint/burn for token pairs
 }
 ```
 
@@ -394,32 +411,37 @@ type ChainApp struct {
 ```
 
 4. Update the NewChainApp constructor to include the EVMOptionsFn parameter:
-```go
-func NewChainApp(
-    // ... existing params
-    evmAppOptions EVMOptionsFn, // Add this parameter
-    // ... other params
-) *ChainApp {
-```
+	```go
+	func NewChainApp(
+		// ... existing params
+		loadLatest bool,
+		appOpts servertypes.AppOptions,
+		evmAppOptions EVMOptionsFn, // <<< Add this parameter
+		baseAppOptions ...func(*baseapp.BaseApp),
+	) *ChainApp { // Or your app struct type
+		// ...
+	```
 
-5. Update encoding configuration to use EVM encoding:
-```go
-// Replace existing encoding setup with:
-encodingConfig := evmencoding.MakeConfig()
-interfaceRegistry := encodingConfig.InterfaceRegistry
-appCodec := encodingConfig.Codec
-legacyAmino := encodingConfig.Amino
-txConfig := encodingConfig.TxConfig
-```
+5. Replace standard SDK encoding with `evmencoding.MakeConfig()`.
+	```go
+	// Replace existing encoding setup with:
+	encodingConfig := evmencoding.MakeConfig()
+	interfaceRegistry := encodingConfig.InterfaceRegistry
+	appCodec := encodingConfig.Codec
+	legacyAmino := encodingConfig.Amino
+	txConfig := encodingConfig.TxConfig
+	```
 
 6. Call EVM App options:
-```go
-// Add after encoder has been set
-if err := evmAppOptions(bApp.ChainID()); err != nil {
-    // initialize the EVM application configuration
-    panic(fmt.Errorf("failed to initialize EVM app configuration: %w", err))
-}
-```
+	```go
+		bApp.SetTxEncoder(txConfig.TxEncoder())
+
+		// Add after encoder has been set:
+		if err := evmAppOptions(bApp.ChainID()); err != nil {
+			// Initialize the EVM application configuration
+			panic(fmt.Errorf("failed to initialize EVM app configuration: %w", err))
+		}
+	```
 
 7. Add EVM store keys:
 ```go
@@ -431,9 +453,10 @@ keys := storetypes.NewKVStoreKeys(
 )
 
 tkeys := storetypes.NewTransientStoreKeys(
-    // Add these keys
-    evmtypes.TransientKey,
-    feemarkettypes.TransientKey,
+	paramstypes.TStoreKey,
+	// Add these keys:
+	evmtypes.TransientKey,
+	feemarkettypes.TransientKey,
 )
 ```
 
@@ -516,7 +539,7 @@ app.TransferKeeper = ibctransferkeeper.NewKeeper(
     app.GetSubspace(ibctransfertypes.ModuleName),
     app.IBCKeeper.ChannelKeeper,
     app.IBCKeeper.ChannelKeeper,
-    &app.IBCKeeper.PortKeeper,
+    app.IBCKeeper.PortKeeper,
     app.AccountKeeper,
     app.BankKeeper,
     scopedTransferKeeper,
@@ -627,10 +650,22 @@ func BlockedAddresses() map[string]bool {
 
 15. Update params keeper subspaces:
 ```go
-// Add these lines:
-paramsKeeper.Subspace(evmtypes.ModuleName)
-paramsKeeper.Subspace(feemarkettypes.ModuleName)
-paramsKeeper.Subspace(erc20types.ModuleName)
+    func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey storetypes.StoreKey) paramskeeper.Keeper {
+        paramsKeeper := paramskeeper.NewKeeper(appCodec, legacyAmino, key, tkey)
+
+        // Register subspaces for existing modules (auth, bank, staking, etc.)
+        // ...
+
+        // Add subspaces for EVM modules:
+        paramsKeeper.Subspace(evmtypes.ModuleName)
+        paramsKeeper.Subspace(feemarkettypes.ModuleName)
+        paramsKeeper.Subspace(erc20types.ModuleName)
+
+        // ... register IBC subspaces if needed ...
+
+        return paramsKeeper
+    }
+
 ```
 
 16. Update the GenesisState Type
@@ -645,21 +680,59 @@ func (app *ChainApp) InitChainer(ctx sdk.Context, req *abci.RequestInitChain) (*
 
 ## Step 7: Update Every Place the EVMAppOptions is Used
 
-Make sure the EVMAppOptions parameter is passed to NewChainApp in all files:
+Make sure the `EVMAppOptions` parameter is passed to `NewChainApp` in all relevant files.
 
-Example: `app/test_helpers.go`
-```go
-func setup(
-    // ...
-) {
-    app := NewChainApp(
-        // ...
-        appOptions,
-        EVMAppOptions,
-        // ...
-    )
-}
-```
+**Changes & Checks:**
+
+1.  **`NewChainApp` Callsites:** Ensure all test files (`app/test_helpers.go`, `app/app_test.go`, `interchaintest/*`) and command files (`cmd/simd/commands.go`, `cmd/simd/root.go`) pass the `app.EVMAppOptions` function when calling `NewChainApp`.
+    *   **Example (`app/test_helpers.go`):**
+        ```go
+        func setup(
+            // ...
+        ) {
+            app := NewChainApp(
+                // ...
+                appOptions,
+                EVMAppOptions, // Pass the actual EVM options
+                // ...
+            )
+        }
+        ```
+    *   **Example (`app/app_test.go`):**
+        ```go
+        func setup( /* ... */ ) *app.ChainApp { // Or your app type
+            // ...
+            app := app.NewChainApp(
+                log.NewNopLogger(), dbm.NewMemDB(), nil, true,
+                appOptions,
+                app.EVMAppOptions, // Pass the actual EVM options
+                // ... baseAppOptions
+            )
+            // ...
+            return app
+        }
+        ```
+    *   **Example (`cmd/simd/commands.go`):**
+        ```go
+        func newApp( /* ... */ ) servertypes.Application {
+            // ...
+            return app.NewChainApp(
+                logger, db, traceStore, true,
+                appOpts,
+                app.EVMAppOptions, // Pass the actual EVM options
+                baseappOptions...,
+            )
+        }
+        func appExport( /* ... */ ) (servertypes.ExportedApp, error) {
+            // ...
+            app := app.NewChainApp(
+                logger, db, traceStore, height == -1,
+                appOpts,
+                app.EVMAppOptions, // Pass the actual EVM options
+            )
+            // ...
+        }
+        ```
 
 ## Step 8: Create EVM Ante Handler Files
 
@@ -898,7 +971,7 @@ func NewAnteHandler(options HandlerOptions) sdk.AnteHandler {
 
 ## Step 9: Update Command Files
 
-Update `cmd/simd/commands.go`:
+Apply these changes to your chain's command files `cmd/simd/commands.go`:
 ```go
 // Add imports
 evmserverconfig "github.com/cosmos/evm/server/config"
