@@ -17,6 +17,8 @@ Below is a list of open source explorers that you can use:
 | ---------- | -------------- | --------------------------------------------------------------- |
 | Ping.Pub   | `cosmos`       | [Github Repo](https://github.com/ping-pub/explorer)             |
 | BigDipper  | `cosmos`       | [Github Repo](https://github.com/forbole/big-dipper-2.0-cosmos) |
+| Blockscout | `ethereum`     | [Github Repo](https://github.com/blockscout/blockscout)         |
+
 
 ## Cosmos & EVM Compatible explorers
 

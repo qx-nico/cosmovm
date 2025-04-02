@@ -15,13 +15,6 @@ With Remix, you can write, test, and deploy smart contracts written in Solidity.
 It also includes debugging tools and a simulation environment
 for testing contracts before deploying them to the blockchain.
 The tool provides plugins as well.
-- [Truffle Suite](https://trufflesuite.com/docs/) contains a suite of comprehensive tools
-to streamline the process of building and testing smart contracts,
-and deploying them to any Cosmos EVM networks, in Javascript/Typescript.
-The suite contains [Truffle](https://trufflesuite.com/docs/truffle/)
-to make compiling, testing, debugging, and deploying smart contract development.
-[Ganache](https://trufflesuite.com/docs/ganache/) provides easy and fast local blockchain development environment
-with UI and CLI functionalities.
 [Drizzle](https://trufflesuite.com/docs/drizzle/) packs frontend libraries
 that enables standard-compliant wallet connection, account,
 and contract state management through React components.
@@ -37,6 +30,6 @@ for Ethereum-compatible chains and includes the most used ERC standards.
 
 ## IDE
 
-- [Truffle for VSCode](https://trufflesuite.com/docs/vscode-ext/) is a Visual Studio Code extension
+- [Hardhat for VSCode](https://hardhat.org/hardhat-vscode/docs/overview) is a Visual Studio Code extension
 that simplifies how you create, build, debug,
 and deploy smart contracts on Ethereum and EVM-compatible blockchains.
