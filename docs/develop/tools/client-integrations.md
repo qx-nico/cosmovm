@@ -14,7 +14,7 @@ EthersJS and Web3JS are two most commonly used libraries in dApp development. De
 with blockchain and query JSON-RPC data, for example. Additionally, both of these libraries contain utilities to aid in
 task like converting large numbers (BigNumber).
 
-- [Ethers.js](https://docs.ethers.org/v5/) is the latest JS library that aims to be a complete and compact library for
+- [Ethers.js](https://docs.ethers.org/v6/) is the latest JS library that aims to be a complete and compact library for
 interacting with the Ethereum Blockchain and its ecosystem.
-- [web3js](https://web3js.readthedocs.io/en/v1.8.2/) is a collection of libraries that allow you to interact with a local
+- [web3js](https://web3js.readthedocs.io/) is a collection of libraries that allow you to interact with a local
 or remote ethereum node using HTTP, IPC or WebSocket.

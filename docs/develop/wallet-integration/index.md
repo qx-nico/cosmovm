@@ -12,6 +12,12 @@ the wallet type of the user, create the transaction, request signatures from the
 - Head over to our [Cosmos EVM Client Integrations](./../../develop/tools/client-integrations)
   to leverage our Typescript or Python libraries.
 
+| Wallet     | Support            | URL                                                             |
+| ---------- | --------------     | --------------------------------------------------------------- |
+| Keplr      | `cosmos, ethereum` | [Extension](https://chromewebstore.google.com/detail/nkbihfbeogaeaoehlefnkodbefgpgknn) |
+| Metamask   | `ethereum`         | [Extension](https://chromewebstore.google.com/detail/dmkamcknogkgcdfhhbddcghachkejeap) |
+| Rabby      | `ethereum`         | [Extension](https://chromewebstore.google.com/detail/acmacodkjbdgmoleebolmdjonilkdbch) |
+
 ## Gas & Estimation
 
 When developing and running dApps on Cosmos EVM, the wallet configuration will attempt to calculate the correct gas amount
