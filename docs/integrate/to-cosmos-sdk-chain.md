@@ -411,45 +411,45 @@ type ChainApp struct {
 ```
 
 4. Update the NewChainApp constructor to include the EVMOptionsFn parameter:
-	```go
-	func NewChainApp(
-		// ... existing params
-		loadLatest bool,
-		appOpts servertypes.AppOptions,
-		evmAppOptions EVMOptionsFn, // <<< Add this parameter
-		baseAppOptions ...func(*baseapp.BaseApp),
-	) *ChainApp { // Or your app struct type
-		// ...
-	```
+```go
+func NewChainApp(
+	// ... existing params
+	loadLatest bool,
+	appOpts servertypes.AppOptions,
+	evmAppOptions EVMOptionsFn, // <<< Add this parameter
+	baseAppOptions ...func(*baseapp.BaseApp),
+) *ChainApp { // Or your app struct type
+	// ...
+```
 
 5. Replace standard SDK encoding with `evmencoding.MakeConfig()`.
-	```go
-	// Replace existing encoding setup with:
-	encodingConfig := evmencoding.MakeConfig()
-	interfaceRegistry := encodingConfig.InterfaceRegistry
-	appCodec := encodingConfig.Codec
-	legacyAmino := encodingConfig.Amino
-	txConfig := encodingConfig.TxConfig
-	```
+```go
+// Replace existing encoding setup with:
+encodingConfig := evmencoding.MakeConfig()
+interfaceRegistry := encodingConfig.InterfaceRegistry
+appCodec := encodingConfig.Codec
+legacyAmino := encodingConfig.Amino
+txConfig := encodingConfig.TxConfig
+```
 
 6. Call EVM App options:
-	```go
-		bApp.SetTxEncoder(txConfig.TxEncoder())
+```go
+bApp.SetTxEncoder(txConfig.TxEncoder())
 
-		// Add after encoder has been set:
-		if err := evmAppOptions(bApp.ChainID()); err != nil {
-			// Initialize the EVM application configuration
-			panic(fmt.Errorf("failed to initialize EVM app configuration: %w", err))
-		}
+// Add after encoder has been set:
+if err := evmAppOptions(bApp.ChainID()); err != nil {
+	// Initialize the EVM application configuration
+	panic(fmt.Errorf("failed to initialize EVM app configuration: %w", err))
+}
 	```
 
 7. Add EVM store keys:
 ```go
 keys := storetypes.NewKVStoreKeys(
-    // Add these keys
-    evmtypes.StoreKey,
-    feemarkettypes.StoreKey,
-    erc20types.StoreKey,
+// Add these keys
+evmtypes.StoreKey,
+feemarkettypes.StoreKey,
+erc20types.StoreKey,
 )
 
 tkeys := storetypes.NewTransientStoreKeys(
@@ -682,57 +682,43 @@ func (app *ChainApp) InitChainer(ctx sdk.Context, req *abci.RequestInitChain) (*
 
 Make sure the `EVMAppOptions` parameter is passed to `NewChainApp` in all relevant files.
 
-**Changes & Checks:**
+**`NewChainApp` Callsites:** Ensure all test files (`app/test_helpers.go`, `app/app_test.go`, `interchaintest/*`) and command files (`cmd/simd/commands.go`, `cmd/simd/root.go`) pass the `app.EVMAppOptions` function when calling `NewChainApp`.
 
-1.  **`NewChainApp` Callsites:** Ensure all test files (`app/test_helpers.go`, `app/app_test.go`, `interchaintest/*`) and command files (`cmd/simd/commands.go`, `cmd/simd/root.go`) pass the `app.EVMAppOptions` function when calling `NewChainApp`.
-    *   **Example (`app/test_helpers.go`):**
-        ```go
-        func setup(
+*   **Example (`app/test_helpers.go`):**
+    ```go
+    func setup(
+        // ...
+    ) {
+        app := NewChainApp(
             // ...
-        ) {
-            app := NewChainApp(
-                // ...
-                appOptions,
-                EVMAppOptions, // Pass the actual EVM options
-                // ...
-            )
-        }
-        ```
-    *   **Example (`app/app_test.go`):**
-        ```go
-        func setup( /* ... */ ) *app.ChainApp { // Or your app type
+            appOptions,
+            EVMAppOptions, // Pass the actual EVM options
             // ...
-            app := app.NewChainApp(
-                log.NewNopLogger(), dbm.NewMemDB(), nil, true,
-                appOptions,
-                app.EVMAppOptions, // Pass the actual EVM options
-                // ... baseAppOptions
-            )
-            // ...
-            return app
-        }
-        ```
-    *   **Example (`cmd/simd/commands.go`):**
-        ```go
-        func newApp( /* ... */ ) servertypes.Application {
-            // ...
-            return app.NewChainApp(
-                logger, db, traceStore, true,
-                appOpts,
-                app.EVMAppOptions, // Pass the actual EVM options
-                baseappOptions...,
-            )
-        }
-        func appExport( /* ... */ ) (servertypes.ExportedApp, error) {
-            // ...
-            app := app.NewChainApp(
-                logger, db, traceStore, height == -1,
-                appOpts,
-                app.EVMAppOptions, // Pass the actual EVM options
-            )
-            // ...
-        }
-        ```
+        )
+    }
+    ```
+*   **Example (`cmd/simd/commands.go`):**
+    ```go
+    func newApp( /* ... */ ) servertypes.Application {
+        // ...
+        return app.NewChainApp(
+            logger, db, traceStore, true,
+            appOpts,
+            app.EVMAppOptions, // Pass the actual EVM options
+            baseappOptions...,
+        )
+    }
+
+    func appExport( /* ... */ ) (servertypes.ExportedApp, error) {
+        // ...
+        app := app.NewChainApp(
+            logger, db, traceStore, height == -1,
+            appOpts,
+            app.EVMAppOptions, // Pass the actual EVM options
+        )
+        // ...
+    }
+    ```
 
 ## Step 8: Create EVM Ante Handler Files
 
